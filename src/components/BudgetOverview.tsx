@@ -14,27 +14,7 @@ const BudgetOverview: React.FC = () => {
         { name: 'Savings', value: budgetSummary.actualSavings, color: '#10B981', recommended: budgetSummary.recommendedSavings },
     ];
 
-    const getStatusIcon = (status: string) => {
-        switch (status) {
-            case 'over':
-                return <AlertCircle size={18} className="text-error" />;
-            case 'under':
-                return <TrendingDown size={18} className="text-warning" />;
-            default:
-                return <TrendingUp size={18} className="text-success" />;
-        }
-    };
 
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case 'over':
-                return 'Over Budget';
-            case 'under':
-                return 'Under Budget';
-            default:
-                return 'On Track';
-        }
-    };
 
     return (
         <div className="card budget-overview-card">

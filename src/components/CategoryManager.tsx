@@ -199,7 +199,7 @@ const CategoryManager: React.FC = () => {
 
     const hierarchy = getCategoryHierarchy();
 
-    const renderCategorySection = (sectionType: ExpenseCategory, title: string) => {
+    const renderCategorySection = (sectionType: ExpenseCategory) => {
         const sectionCategories = hierarchy.filter((h) => h.category.type === sectionType);
 
         return (
