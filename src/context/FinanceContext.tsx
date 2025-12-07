@@ -58,7 +58,7 @@ interface FinanceProviderProps {
     children: ReactNode;
 }
 
-const CURRENT_DATA_VERSION = 2;
+const CURRENT_DATA_VERSION = 3;
 
 export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) => {
     const [data, setData] = useState<FinancialData>(() => {
@@ -102,6 +102,15 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
                 });
 
                 migratedData.version = 2;
+                hasChanges = true;
+            }
+
+            // Migration 3: Add Pets Category
+            if (migratedData.version < 3) {
+                console.log('Migrating data to version 3 (Pets)...');
+                // The "missing defaults" logic below will handle adding the new categories
+                // We just need to bump the version here
+                migratedData.version = 3;
                 hasChanges = true;
             }
 

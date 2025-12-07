@@ -365,6 +365,76 @@
     grid-column: span 12;
 }
 
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--spacing-xs);
+}
+
+.tab {
+    background: none;
+    border: none;
+    padding: var(--spacing-xs) var(--spacing-md);
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+}
+
+.tab:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-secondary);
+}
+
+.tab.active {
+    color: var(--primary-color);
+    background-color: rgba(37, 99, 235, 0.1);
+}
+
+/* Compact Budget Grid */
+.budget-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+}
+
+.budget-item-compact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.budget-item-header-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.budget-progress-compact {
+    height: 8px;
+    background-color: var(--bg-secondary);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.budget-progress-bar-compact {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .budget-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .settings-summary {
     padding: var(--spacing-md);
     background: var(--color-bg-secondary);

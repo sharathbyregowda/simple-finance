@@ -41,114 +41,124 @@ const BudgetOverview: React.FC = () => {
             <h3 style={{ marginBottom: 'var(--spacing-lg)' }}>50/30/20 Budget Overview</h3>
 
             <div className="budget-chart-container">
-                <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                        <Pie
-                            data={chartData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={100}
-                            paddingAngle={5}
-                            dataKey="value"
-                        >
-                            {chartData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} />
-                            ))}
-                        </Pie>
-                        <Tooltip
-                            formatter={(value: number) => `$${value.toLocaleString()}`}
-                            contentStyle={{
-                                background: 'rgba(30, 41, 59, 0.9)',
-                                border: '1px solid #334155',
-                                borderRadius: '8px',
-                                color: '#F1F5F9',
-                            }}
-                        />
-                        <Legend />
-                    </PieChart>
-                </ResponsiveContainer>
+                {budgetSummary.actualNeeds + budgetSummary.actualWants + budgetSummary.actualSavings > 0 ? (
+                    <ResponsiveContainer width="100%" height={220}>
+                        <PieChart>
+                            <Pie
+                                data={chartData}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={50}
+                                outerRadius={80}
+                                paddingAngle={5}
+                                dataKey="value"
+                            >
+                                {chartData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                ))}
+                            </Pie>
+                            <Tooltip
+                                formatter={(value: number) => `$${value.toLocaleString()}`}
+                                contentStyle={{
+                                    background: 'rgba(30, 41, 59, 0.9)',
+                                    border: '1px solid #334155',
+                                    borderRadius: '8px',
+                                    color: '#F1F5F9',
+                                }}
+                            />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                ) : (
+                    <div className="flex flex-col items-center justify-center" style={{ height: '220px', color: 'var(--text-secondary)' }}>
+                        <div style={{
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '50%',
+                            border: '8px solid var(--bg-secondary)',
+                            marginBottom: 'var(--spacing-sm)'
+                        }}></div>
+                        <p>No expenses yet</p>
+                    </div>
+                )}
             </div>
 
-            <div className="budget-breakdown">
-                <div className="budget-category">
-                    <div className="budget-category-header">
-                        <div className="budget-category-title">
+            <div className="budget-grid">
+                {/* Needs */}
+                <div className="budget-item-compact">
+                    <div className="budget-item-header-compact">
+                        <div className="flex items-center gap-xs">
                             <div className="budget-color-dot" style={{ background: '#F59E0B' }}></div>
-                            <span>Needs (50%)</span>
+                            <span>Needs</span>
                         </div>
-                        <div className="budget-status">
-                            {getStatusIcon(budgetSummary.needsStatus)}
-                            <span className={`status-text ${budgetSummary.needsStatus}`}>
-                                {getStatusText(budgetSummary.needsStatus)}
-                            </span>
-                        </div>
+                        <span className={`text-xs font-medium ${budgetSummary.needsStatus === 'over' ? 'text-error' : 'text-success'}`}>
+                            {Math.round((budgetSummary.actualNeeds / budgetSummary.recommendedNeeds) * 100)}%
+                        </span>
                     </div>
-                    <div className="budget-progress-bar">
+                    <div className="budget-progress-compact">
                         <div
-                            className="budget-progress-fill needs"
+                            className="budget-progress-bar-compact"
                             style={{
                                 width: `${Math.min((budgetSummary.actualNeeds / budgetSummary.recommendedNeeds) * 100, 100)}%`,
+                                backgroundColor: '#F59E0B'
                             }}
                         ></div>
                     </div>
-                    <div className="budget-amounts">
-                        <span>{formatCurrency(budgetSummary.actualNeeds, data.currency)} spent</span>
-                        <span className="text-muted">of {formatCurrency(budgetSummary.recommendedNeeds, data.currency)}</span>
+                    <div className="text-xs text-muted flex justify-between">
+                        <span>{formatCurrency(budgetSummary.actualNeeds, data.currency)}</span>
+                        <span>{formatCurrency(budgetSummary.recommendedNeeds, data.currency)}</span>
                     </div>
                 </div>
 
-                <div className="budget-category">
-                    <div className="budget-category-header">
-                        <div className="budget-category-title">
+                {/* Wants */}
+                <div className="budget-item-compact">
+                    <div className="budget-item-header-compact">
+                        <div className="flex items-center gap-xs">
                             <div className="budget-color-dot" style={{ background: '#A855F7' }}></div>
-                            <span>Wants (30%)</span>
+                            <span>Wants</span>
                         </div>
-                        <div className="budget-status">
-                            {getStatusIcon(budgetSummary.wantsStatus)}
-                            <span className={`status-text ${budgetSummary.wantsStatus}`}>
-                                {getStatusText(budgetSummary.wantsStatus)}
-                            </span>
-                        </div>
+                        <span className={`text-xs font-medium ${budgetSummary.wantsStatus === 'over' ? 'text-error' : 'text-success'}`}>
+                            {Math.round((budgetSummary.actualWants / budgetSummary.recommendedWants) * 100)}%
+                        </span>
                     </div>
-                    <div className="budget-progress-bar">
+                    <div className="budget-progress-compact">
                         <div
-                            className="budget-progress-fill wants"
+                            className="budget-progress-bar-compact"
                             style={{
                                 width: `${Math.min((budgetSummary.actualWants / budgetSummary.recommendedWants) * 100, 100)}%`,
+                                backgroundColor: '#A855F7'
                             }}
                         ></div>
                     </div>
-                    <div className="budget-amounts">
-                        <span>{formatCurrency(budgetSummary.actualWants, data.currency)} spent</span>
-                        <span className="text-muted">of {formatCurrency(budgetSummary.recommendedWants, data.currency)}</span>
+                    <div className="text-xs text-muted flex justify-between">
+                        <span>{formatCurrency(budgetSummary.actualWants, data.currency)}</span>
+                        <span>{formatCurrency(budgetSummary.recommendedWants, data.currency)}</span>
                     </div>
                 </div>
 
-                <div className="budget-category">
-                    <div className="budget-category-header">
-                        <div className="budget-category-title">
+                {/* Savings */}
+                <div className="budget-item-compact">
+                    <div className="budget-item-header-compact">
+                        <div className="flex items-center gap-xs">
                             <div className="budget-color-dot" style={{ background: '#10B981' }}></div>
-                            <span>Savings (20%)</span>
+                            <span>Savings</span>
                         </div>
-                        <div className="budget-status">
-                            {getStatusIcon(budgetSummary.savingsStatus)}
-                            <span className={`status-text ${budgetSummary.savingsStatus}`}>
-                                {getStatusText(budgetSummary.savingsStatus)}
-                            </span>
-                        </div>
+                        <span className={`text-xs font-medium ${budgetSummary.savingsStatus === 'under' ? 'text-warning' : 'text-success'}`}>
+                            {Math.round((budgetSummary.actualSavings / budgetSummary.recommendedSavings) * 100)}%
+                        </span>
                     </div>
-                    <div className="budget-progress-bar">
+                    <div className="budget-progress-compact">
                         <div
-                            className="budget-progress-fill savings"
+                            className="budget-progress-bar-compact"
                             style={{
                                 width: `${Math.min((budgetSummary.actualSavings / budgetSummary.recommendedSavings) * 100, 100)}%`,
+                                backgroundColor: '#10B981'
                             }}
                         ></div>
                     </div>
-                    <div className="budget-amounts">
-                        <span>{formatCurrency(budgetSummary.actualSavings, data.currency)} saved</span>
-                        <span className="text-muted">of {formatCurrency(budgetSummary.recommendedSavings, data.currency)}</span>
+                    <div className="text-xs text-muted flex justify-between">
+                        <span>{formatCurrency(budgetSummary.actualSavings, data.currency)}</span>
+                        <span>{formatCurrency(budgetSummary.recommendedSavings, data.currency)}</span>
                     </div>
                 </div>
             </div>

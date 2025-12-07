@@ -24,6 +24,8 @@ const CategoryManager: React.FC = () => {
     const [editIcon, setEditIcon] = useState('');
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
+    const [activeTab, setActiveTab] = useState<ExpenseCategory>(ExpenseCategory.NEEDS);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!name) return;
@@ -117,7 +119,7 @@ const CategoryManager: React.FC = () => {
         setShowEmojiPicker(false);
     };
 
-    const commonEmojis = ['💰', '🏠', '🚗', '🍔', '🎬', '🛒', '💡', '📱', '✈️', '🎨', '🏋️', '📚', '🎮', '☕', '👕', '💊'];
+    const commonEmojis = ['💰', '🏠', '🚗', '🍔', '🎬', '🛒', '💡', '📱', '✈️', '🎨', '🏋️', '📚', '🎮', '☕', '👕', '💊', '🐾'];
 
     // Predefined subcategory options by category type
     const subcategoryOptions = {
@@ -145,6 +147,12 @@ const CategoryManager: React.FC = () => {
             { name: 'Daycare', icon: '👶' },
             { name: 'After School Care', icon: '🏫' },
             { name: 'Household Supplies', icon: '🧹' },
+            // Pets
+            { name: 'Food', icon: '🦴' },
+            { name: 'Vet/Medical', icon: '⚕️' },
+            { name: 'Grooming', icon: '✂️' },
+            { name: 'Supplies', icon: '💩' },
+            { name: 'Treats', icon: '🍪' },
         ],
         [ExpenseCategory.WANTS]: [
             { name: 'Eating Out / Takeaway', icon: '🥡' },
@@ -196,7 +204,7 @@ const CategoryManager: React.FC = () => {
 
         return (
             <div className="category-section">
-                <h4 className="category-section-title">{title}</h4>
+                {/* Title removed as it's now handled by tabs */}
                 <div className="category-items">
                     {sectionCategories.map(({ category, subcategories }) => (
                         <div key={category.id} className="category-tree-item">
@@ -564,11 +572,36 @@ const CategoryManager: React.FC = () => {
                 </form>
             )}
 
+            {/* Tabs */}
+            <div className="tabs">
+                <button
+                    className={`tab ${activeTab === ExpenseCategory.INCOME ? 'active' : ''}`}
+                    onClick={() => setActiveTab(ExpenseCategory.INCOME)}
+                >
+                    Income
+                </button>
+                <button
+                    className={`tab ${activeTab === ExpenseCategory.NEEDS ? 'active' : ''}`}
+                    onClick={() => setActiveTab(ExpenseCategory.NEEDS)}
+                >
+                    Needs
+                </button>
+                <button
+                    className={`tab ${activeTab === ExpenseCategory.WANTS ? 'active' : ''}`}
+                    onClick={() => setActiveTab(ExpenseCategory.WANTS)}
+                >
+                    Wants
+                </button>
+                <button
+                    className={`tab ${activeTab === ExpenseCategory.SAVINGS ? 'active' : ''}`}
+                    onClick={() => setActiveTab(ExpenseCategory.SAVINGS)}
+                >
+                    Savings
+                </button>
+            </div>
+
             <div className="category-list">
-                {renderCategorySection(ExpenseCategory.INCOME, 'Income Sources')}
-                {renderCategorySection(ExpenseCategory.NEEDS, 'Needs (50%)')}
-                {renderCategorySection(ExpenseCategory.WANTS, 'Wants (30%)')}
-                {renderCategorySection(ExpenseCategory.SAVINGS, 'Savings (20%)')}
+                {renderCategorySection(activeTab, '')}
             </div>
         </div>
     );

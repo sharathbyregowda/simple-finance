@@ -10,6 +10,7 @@ export const DEFAULT_CATEGORIES: CustomCategory[] = [
     { id: 'cat-5', name: 'Insurance', type: ExpenseCategory.NEEDS, icon: '🛡️', color: '#F59E0B' },
     { id: 'cat-6', name: 'Healthcare', type: ExpenseCategory.NEEDS, icon: '⚕️', color: '#F59E0B' },
     { id: 'cat-7', name: 'Debt Payments', type: ExpenseCategory.NEEDS, icon: '💳', color: '#F59E0B' },
+    { id: 'cat-18', name: 'Pets', type: ExpenseCategory.NEEDS, icon: '🐾', color: '#F59E0B' },
 
     // Wants (30%)
     { id: 'cat-8', name: 'Eating Out / Takeaway', type: ExpenseCategory.WANTS, icon: '🥡', color: '#A855F7' },
@@ -57,4 +58,11 @@ export const DEFAULT_CATEGORIES: CustomCategory[] = [
     { id: 'sub-inv-1', name: 'ISA', type: ExpenseCategory.SAVINGS, icon: '💰', parentId: 'cat-15', isSubcategory: true },
     { id: 'sub-inv-2', name: 'Premium Bonds', type: ExpenseCategory.SAVINGS, icon: '🎫', parentId: 'cat-15', isSubcategory: true },
     { id: 'sub-inv-3', name: 'Stocks & Shares', type: ExpenseCategory.SAVINGS, icon: '📊', parentId: 'cat-15', isSubcategory: true },
+
+    // Pets
+    { id: 'sub-pets-1', name: 'Food', type: ExpenseCategory.NEEDS, icon: '🦴', parentId: 'cat-18', isSubcategory: true },
+    { id: 'sub-pets-2', name: 'Vet/Medical', type: ExpenseCategory.NEEDS, icon: '⚕️', parentId: 'cat-18', isSubcategory: true },
+    { id: 'sub-pets-3', name: 'Grooming', type: ExpenseCategory.NEEDS, icon: '✂️', parentId: 'cat-18', isSubcategory: true },
+    { id: 'sub-pets-4', name: 'Supplies', type: ExpenseCategory.NEEDS, icon: '💩', parentId: 'cat-18', isSubcategory: true },
+    { id: 'sub-pets-5', name: 'Treats', type: ExpenseCategory.NEEDS, icon: '🍪', parentId: 'cat-18', isSubcategory: true },
 ];
