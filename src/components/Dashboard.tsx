@@ -1,9 +1,10 @@
 import React from 'react';
 import { useFinance } from '../context/FinanceContext';
-import { formatMonth } from '../utils/calculations';
+import { formatMonth, calculateMonthlyTrends } from '../utils/calculations';
 import IncomeForm from './IncomeForm';
 import ExpenseLedger from './ExpenseLedger';
 import BudgetOverview from './BudgetOverview';
+import FinancialJourney from './FinancialJourney';
 import IncomeVsExpenses from './IncomeVsExpenses';
 import CategoryBreakdown from './CategoryBreakdown';
 import SavingsSummary from './SavingsSummary';
@@ -66,6 +67,9 @@ const Dashboard: React.FC = () => {
 
                     {/* Budget Overview */}
                     <BudgetOverview />
+
+                    {/* Financial Journey */}
+                    <FinancialJourney data={calculateMonthlyTrends(data.incomes, data.expenses)} />
 
                     {/* Income vs Expenses Chart */}
                     <IncomeVsExpenses />
