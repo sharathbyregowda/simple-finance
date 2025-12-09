@@ -224,6 +224,10 @@
     grid-column: span 12;
 }
 
+.financial-journey-card {
+    grid-column: span 12;
+}
+
 .budget-chart-container {
     margin-bottom: var(--spacing-xl);
 }

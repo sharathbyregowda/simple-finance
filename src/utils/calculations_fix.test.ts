@@ -1,5 +1,5 @@
 
-import { calculateBudgetSummary } from './calculations';
+import { calculateBudgetSummary, calculateMonthlyTrends } from './calculations';
 import { ExpenseCategory } from '../types';
 
 describe('Financial Calculation Fixes', () => {
@@ -50,5 +50,31 @@ describe('Financial Calculation Fixes', () => {
         // That is calculated in components usually or separate helper.
         // In SavingsSummary.tsx, it uses: ((budgetSummary.netSavings / budgetSummary.totalIncome) * 100)
         // So validation of netSavings above is key.
+    });
+
+    test('calculateMonthlyTrends should correctly calculate savings as (Income - (Needs + Wants))', () => {
+        const trends = calculateMonthlyTrends(mockIncomes, mockExpenses);
+        const decData = trends.find(t => t.month === '2023-12');
+
+        expect(decData).toBeDefined();
+        if (decData) {
+            // Income: 30000
+            // Needs: 22000
+            // Wants: 2000
+            // Savings (Contrib): 5000
+
+            // Expenses should be Needs + Wants = 24000
+            expect(decData.expenses).toBe(24000);
+
+            // Savings should be Income - Expenses = 6000 (5000 contrib + 1000 unallocated)
+            expect(decData.savings).toBe(6000);
+
+            // Verify breakdown
+            expect(decData.needs).toBe(22000);
+            expect(decData.wants).toBe(2000);
+
+            // Note: decData.savings overwrites the cumulative savings contributions in the current logic loop
+            // but that is what we want for the final "Net Savings" value.
+        }
     });
 });

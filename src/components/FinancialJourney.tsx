@@ -53,9 +53,9 @@ const FinancialJourney: React.FC<FinancialJourneyProps> = ({ data }) => {
             </div>
 
             <div className="grid grid-cols-3 gap-4">
-                <StatBar label="Avg Needs" value={stats.needsPercentage} color="#F59E0B" />
-                <StatBar label="Avg Wants" value={stats.wantsPercentage} color="#A855F7" />
-                <StatBar label="Avg Savings" value={stats.savingsPercentage} color="#10B981" />
+                <StatBar label="Needs" value={stats.needsPercentage} color="#F59E0B" />
+                <StatBar label="Wants" value={stats.wantsPercentage} color="#A855F7" />
+                <StatBar label="Savings" value={stats.savingsPercentage} color="#10B981" />
             </div>
         </div>
     );

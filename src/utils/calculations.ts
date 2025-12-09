@@ -131,7 +131,11 @@ export const calculateMonthlyTrends = (
     // Add expense data
     expenses.forEach((expense) => {
         const data = monthMap.get(expense.month)!;
-        data.expenses += expense.amount;
+        // Only add to total expenses if it's not a savings contribution
+        // This ensures Total Expenses = Needs + Wants
+        if (expense.categoryType !== ExpenseCategory.SAVINGS) {
+            data.expenses += expense.amount;
+        }
 
         switch (expense.categoryType) {
             case ExpenseCategory.NEEDS:
