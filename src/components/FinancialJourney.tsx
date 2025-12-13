@@ -111,7 +111,7 @@ const FinancialJourney: React.FC<FinancialJourneyProps> = ({ data, expenses, cat
                     <span>🏔️</span> Your Financial Journey
                 </h3>
                 <p className="text-muted text-sm">
-                    Based on your activity. Current Balance: <span className="font-mono font-semibold text-[var(--text-primary)]">{ratioString}</span> (Needs/Wants/Savings).
+                    Based on {data.length} months data your budget ratio is <span className="font-mono font-semibold text-[var(--text-primary)]">{ratioString}</span> (needs/wants/savings).
                 </p>
 
                 {/* Persona & Recommendation */}
@@ -144,7 +144,7 @@ const FinancialJourney: React.FC<FinancialJourneyProps> = ({ data, expenses, cat
                     current={stats.needsPercentage}
                     items={topCategories.needs}
                     color="#0ea5e9" // Sky blue 
-                    bgClass="bg-sky-50/50 dark:bg-sky-900/10"
+                    bgClass="bg-[var(--color-bg-secondary)]"
                 />
                 <CategoryColumn
                     title="Wants"
@@ -152,7 +152,7 @@ const FinancialJourney: React.FC<FinancialJourneyProps> = ({ data, expenses, cat
                     current={stats.wantsPercentage}
                     items={topCategories.wants}
                     color="#8b5cf6" // Violet
-                    bgClass="bg-violet-50/50 dark:bg-violet-900/10"
+                    bgClass="bg-[var(--color-bg-secondary)]"
                 />
                 <CategoryColumn
                     title="Savings"
@@ -160,7 +160,7 @@ const FinancialJourney: React.FC<FinancialJourneyProps> = ({ data, expenses, cat
                     current={stats.savingsPercentage}
                     items={topCategories.savings}
                     color="#10b981" // Emerald
-                    bgClass="bg-emerald-50/50 dark:bg-emerald-900/10"
+                    bgClass="bg-[var(--color-bg-secondary)]"
                 />
             </div>
         </div>
