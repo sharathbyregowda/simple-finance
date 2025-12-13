@@ -44,13 +44,17 @@ describe('generateMonthlySummary', () => {
             budgetSummary: mockBudgetSummary,
             expenses: mockExpenses,
             categories: mockCategories,
-            monthlyHistory: mockHistory
+            monthlyHistory: mockHistory,
+            currencyCode: 'USD'
         });
 
         expect(result[0]).toContain('below your income');
+        // Logic changed: "You saved $800 less than the 20% target."
         expect(result).toContain('You saved $800 less than the 20% target.');
         expect(result.some(r => r.includes('Travel'))).toBe(true);
-        expect(result).toContain('Current savings rate is 4%.');
+        // Trend "Savings fell..." should replace "Current savings rate..."
+        expect(result.some(r => r.includes('Savings fell from 20% to 4%'))).toBe(true);
+        expect(result.some(r => r.includes('Current savings rate is 4%'))).toBe(false);
     });
 
     it('generates correct over budget summary', () => {
@@ -60,7 +64,8 @@ describe('generateMonthlySummary', () => {
             budgetSummary: overBudget,
             expenses: mockExpenses,
             categories: [],
-            monthlyHistory: mockHistory
+            monthlyHistory: mockHistory,
+            currencyCode: 'USD'
         });
 
         expect(result[0]).toContain('above your income');
@@ -73,9 +78,25 @@ describe('generateMonthlySummary', () => {
             budgetSummary: mockBudgetSummary,
             expenses: mockExpenses,
             categories: [],
-            monthlyHistory: mockHistory
+            monthlyHistory: mockHistory,
+            currencyCode: 'USD'
         });
         // Prev savings rate: 1000/5000 = 20%. Current 4%.
-        expect(result).toContain('Savings fell from 20% to 4%.');
+        expect(result.some(r => r.includes('Savings fell from 20% to 4%'))).toBe(true);
+    });
+
+    it('handles NaN/Zero gracefully', () => {
+        const result = generateMonthlySummary({
+            currentMonth: '2023-01',
+            budgetSummary: { ...mockBudgetSummary, totalExpenses: 0 },
+            expenses: [],
+            categories: [],
+            monthlyHistory: [],
+            currencyCode: 'USD'
+        });
+        // Outcome
+        expect(result.length).toBeGreaterThan(0);
+        // Should not have "NaN"
+        expect(result.some(r => r.includes('NaN'))).toBe(false);
     });
 });

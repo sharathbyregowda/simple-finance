@@ -64,7 +64,7 @@ const Dashboard: React.FC = () => {
 
                 <div className="dashboard-grid">
                     {/* Monthly Summary - Text based */}
-                    <div className="col-span-12">
+                    <div className="col-span-12 monthly-summary-container">
                         <MonthlySummary />
                     </div>
 

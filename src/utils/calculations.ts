@@ -172,7 +172,7 @@ export const getCurrentMonth = (): string => {
     return `${year}-${month}`;
 };
 
-export const formatCurrency = (amount: number, currencyCode: string = 'USD'): string => {
+export const formatCurrency = (amount: number, currencyCode: string = 'USD', options?: Intl.NumberFormatOptions): string => {
     // Map common currency codes to their symbols
     const currencySymbols: Record<string, string> = {
         USD: '$',
@@ -188,7 +188,13 @@ export const formatCurrency = (amount: number, currencyCode: string = 'USD'): st
     };
 
     const symbol = currencySymbols[currencyCode] || '$';
-    return `${symbol}${amount.toLocaleString()}`;
+
+    // Use toLocaleString options if provided, otherwise default behavior
+    const formattedNumber = options
+        ? amount.toLocaleString(undefined, options)
+        : amount.toLocaleString();
+
+    return `${symbol}${formattedNumber}`;
 };
 
 export const formatMonth = (monthStr: string): string => {

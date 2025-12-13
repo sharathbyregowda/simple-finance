@@ -21,7 +21,8 @@ const MonthlySummary: React.FC = () => {
             budgetSummary,
             expenses: data.expenses,
             categories: data.customCategories,
-            monthlyHistory
+            monthlyHistory,
+            currencyCode: data.currency
         });
     }, [data.currentMonth, budgetSummary, data.expenses, data.incomes]);
 
