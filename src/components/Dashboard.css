@@ -1039,6 +1039,7 @@
 
 /* Projection Card */
 .projection-card {
+    grid-column: span 12;
     border-left: 4px solid var(--color-primary);
     background: linear-gradient(to right, rgba(59, 130, 246, 0.05), transparent);
 }

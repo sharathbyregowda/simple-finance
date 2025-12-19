@@ -65,7 +65,7 @@ const Dashboard: React.FC = () => {
 
                 <div className="dashboard-grid">
                     {/* Monthly Summary - Text based */}
-                    <div className="col-span-12 monthly-summary-container">
+                    <div className="monthly-summary-container">
                         <MonthlySummary />
                         <YearlySummary />
                         {!data.currentMonth.endsWith('-ALL') && <IfThisContinues />}
@@ -88,7 +88,7 @@ const Dashboard: React.FC = () => {
                                 budgetSummary={budgetSummary}
                                 cashBalance={budgetSummary.unallocatedCash}
                             />
-                            <div className="col-span-12">
+                            <div>
                                 <IfThisContinues />
                             </div>
                         </>
