@@ -9,6 +9,7 @@ import IncomeVsExpenses from './IncomeVsExpenses';
 import CategoryBreakdown from './CategoryBreakdown';
 import SavingsSummary from './SavingsSummary';
 import MonthlySummary from './MonthlySummary';
+import YearlySummary from './YearlySummary';
 import CategoryManager from './CategoryManager';
 import Settings from './Settings';
 import './Dashboard.css';
@@ -66,6 +67,7 @@ const Dashboard: React.FC = () => {
                     {/* Monthly Summary - Text based */}
                     <div className="col-span-12 monthly-summary-container">
                         <MonthlySummary />
+                        <YearlySummary />
                     </div>
 
                     {/* Summary Cards */}

@@ -165,6 +165,42 @@ export const calculateMonthlyTrends = (
     return Array.from(monthMap.values()).sort((a, b) => a.month.localeCompare(b.month));
 };
 
+export interface YearlyData {
+    year: string;
+    income: number;
+    expenses: number;
+    savings: number;
+    needs: number;
+    wants: number;
+}
+
+export const calculateYearlyTrends = (monthlyHistory: MonthlyData[]): YearlyData[] => {
+    const yearMap = new Map<string, YearlyData>();
+
+    monthlyHistory.forEach((monthData) => {
+        const year = monthData.month.split('-')[0];
+        if (!yearMap.has(year)) {
+            yearMap.set(year, {
+                year,
+                income: 0,
+                expenses: 0,
+                savings: 0,
+                needs: 0,
+                wants: 0,
+            });
+        }
+
+        const yearData = yearMap.get(year)!;
+        yearData.income += monthData.income;
+        yearData.expenses += monthData.expenses;
+        yearData.savings += monthData.savings;
+        yearData.needs += monthData.needs;
+        yearData.wants += monthData.wants;
+    });
+
+    return Array.from(yearMap.values()).sort((a, b) => a.year.localeCompare(b.year));
+};
+
 export const getCurrentMonth = (): string => {
     const now = new Date();
     const year = now.getFullYear();

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateMonthlySummary } from './summary';
+import { generateMonthlySummary, generateYearlySummary } from './summary';
 import { ExpenseCategory } from '../types';
 
 describe('generateMonthlySummary', () => {
@@ -57,7 +57,7 @@ describe('generateMonthlySummary', () => {
 
         // 3. Drivers
         // Travel (1400) + Rent (1000) = 2400 / 4000 = 60%.
-        expect(result).toContain('Travel and Rent made up 60% of total spending.');
+        expect(result).toContain('Travel and Rent made up 60% of total monthly spending.');
 
         // 4. Savings Health
         // 20% -> 4%. "Savings fell..."
@@ -92,7 +92,7 @@ describe('generateMonthlySummary', () => {
         });
 
         // Check outcome
-        expect(result[0]).toContain('Total spending was');
+        expect(result[0]).toContain('Total monthly spending was');
 
         // Check Variances
         // Needs (Prio 2) -> Should be there
@@ -172,5 +172,60 @@ describe('generateMonthlySummary', () => {
 
         // 2. Savings Variance ("Savings exceeded plan by $500") should be SUPPRESSED
         expect(result.some(r => r.includes('Savings exceeded plan'))).toBe(false);
+    });
+
+    describe('generateYearlySummary', () => {
+        const mockYearlyHistory = [
+            { year: '2022', income: 60000, expenses: 40000, savings: 20000, needs: 25000, wants: 15000 },
+            { year: '2023', income: 70000, expenses: 50000, savings: 20000, needs: 30000, wants: 20000 },
+        ];
+
+        it('generates correct yearly outcome and variance', () => {
+            const budgetSummary = {
+                ...mockBudgetSummary,
+                totalIncome: 70000,
+                totalExpenses: 50000,
+                actualNeeds: 30000,
+                actualWants: 20000,
+                recommendedNeeds: 35000, // 50%
+                recommendedWants: 21000, // 30%
+                savingsPercentage: 28.5,
+            };
+
+            const result = generateYearlySummary({
+                year: '2023',
+                budgetSummary: budgetSummary as any,
+                expenses: [],
+                categories: [],
+                yearlyHistory: mockYearlyHistory,
+                currencyCode: 'USD'
+            });
+
+            expect(result[0]).toContain('Total yearly spending was $20,000 below your income.');
+            expect(result.some(r => r.includes('Savings increased'))).toBe(false); // No savings health yet if only 2 years? Wait, 2022 -> 2023.
+            // 2022 rate: 20/60 = 33.3%
+            // 2023 rate: 20/70 = 28.5%
+            // Should show "Savings fell"
+            expect(result.some((r: string) => r.includes('Savings fell from 33% to 29%'))).toBe(true);
+        });
+
+        it('identifies yearly trends', () => {
+            const longHistory = [
+                { year: '2021', income: 50000, expenses: 30000, savings: 20000, needs: 15000, wants: 15000 },
+                { year: '2022', income: 50000, expenses: 35000, savings: 15000, needs: 20000, wants: 15000 },
+                { year: '2023', income: 50000, expenses: 40000, savings: 10000, needs: 25000, wants: 15000 },
+            ];
+
+            const result = generateYearlySummary({
+                year: '2023',
+                budgetSummary: { ...mockBudgetSummary, savingsPercentage: 20 } as any,
+                expenses: [],
+                categories: [],
+                yearlyHistory: longHistory,
+                currencyCode: 'USD'
+            });
+
+            expect(result.some((r: string) => r.includes('Needs spending has increased for three consecutive years.'))).toBe(true);
+        });
     });
 });
