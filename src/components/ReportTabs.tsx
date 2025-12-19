@@ -9,7 +9,7 @@ const ReportTabs: React.FC = () => {
     const [activeTab, setActiveTab] = useState<ReportTab>('budget');
 
     return (
-        <div className="card report-tabs-card col-span-12">
+        <div className="card report-tabs-card">
             <div className="chart-tabs">
                 <button
                     className={`tab-btn ${activeTab === 'budget' ? 'active' : ''}`}

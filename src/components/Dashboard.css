@@ -791,9 +791,8 @@
     background: var(--color-bg-secondary);
 }
 
-.tab-btn.active {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+.report-tabs-card {
+    grid-column: span 12;
 }
 
 .report-tabs-card .tab-content {
