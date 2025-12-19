@@ -796,6 +796,10 @@
     border-bottom-color: var(--color-primary);
 }
 
+.report-tabs-card .tab-content {
+    padding-top: var(--spacing-lg);
+}
+
 .empty-state {
     padding: var(--spacing-2xl);
     text-align: center;

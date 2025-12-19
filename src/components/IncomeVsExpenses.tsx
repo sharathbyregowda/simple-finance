@@ -4,7 +4,11 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { formatMonth } from '../utils/calculations';
 import './Dashboard.css';
 
-const IncomeVsExpenses: React.FC = () => {
+interface IncomeVsExpensesProps {
+    standalone?: boolean;
+}
+
+const IncomeVsExpenses: React.FC<IncomeVsExpensesProps> = ({ standalone = true }) => {
     const { monthlyTrends } = useFinance();
 
     const chartData = monthlyTrends.map((data) => ({
@@ -14,9 +18,9 @@ const IncomeVsExpenses: React.FC = () => {
         Savings: data.savings,
     }));
 
-    return (
-        <div className="card income-vs-expenses-card">
-            <h3 style={{ marginBottom: 'var(--spacing-lg)' }}>Income vs Expenses</h3>
+    const content = (
+        <>
+            {standalone && <h3 style={{ marginBottom: 'var(--spacing-lg)' }}>Income vs Expenses</h3>}
 
             <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={chartData}>
@@ -46,6 +50,16 @@ const IncomeVsExpenses: React.FC = () => {
                     <Bar dataKey="Savings" fill="#3B82F6" radius={[8, 8, 0, 0]} />
                 </BarChart>
             </ResponsiveContainer>
+        </>
+    );
+
+    if (!standalone) {
+        return content;
+    }
+
+    return (
+        <div className="card income-vs-expenses-card">
+            {content}
         </div>
     );
 };

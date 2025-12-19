@@ -5,7 +5,11 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import { formatCurrency } from '../utils/calculations';
 import './Dashboard.css';
 
-const BudgetOverview: React.FC = () => {
+interface BudgetOverviewProps {
+    standalone?: boolean;
+}
+
+const BudgetOverview: React.FC<BudgetOverviewProps> = ({ standalone = true }) => {
     const { budgetSummary, data } = useFinance();
 
     const chartData = [
@@ -14,11 +18,9 @@ const BudgetOverview: React.FC = () => {
         { name: 'Savings', value: budgetSummary.actualSavings, color: '#10B981', recommended: budgetSummary.recommendedSavings },
     ];
 
-
-
-    return (
-        <div className="card budget-overview-card">
-            <h3 style={{ marginBottom: 'var(--spacing-lg)' }}>50/30/20 Budget Overview</h3>
+    const content = (
+        <>
+            {standalone && <h3 style={{ marginBottom: 'var(--spacing-lg)' }}>50/30/20 Budget Overview</h3>}
 
             <div className="budget-chart-container">
                 {budgetSummary.actualNeeds + budgetSummary.actualWants + budgetSummary.actualSavings > 0 ? (
@@ -142,6 +144,16 @@ const BudgetOverview: React.FC = () => {
                     </div>
                 </div>
             </div>
+        </>
+    );
+
+    if (!standalone) {
+        return content;
+    }
+
+    return (
+        <div className="card budget-overview-card">
+            {content}
         </div>
     );
 };

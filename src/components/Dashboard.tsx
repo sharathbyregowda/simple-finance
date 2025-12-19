@@ -3,9 +3,8 @@ import { useFinance } from '../context/FinanceContext';
 import { formatMonth, calculateMonthlyTrends } from '../utils/calculations';
 import IncomeForm from './IncomeForm';
 import ExpenseLedger from './ExpenseLedger';
-import BudgetOverview from './BudgetOverview';
+import ReportTabs from './ReportTabs';
 import FinancialJourney from './FinancialJourney';
-import IncomeVsExpenses from './IncomeVsExpenses';
 import CategoryBreakdown from './CategoryBreakdown';
 import SavingsSummary from './SavingsSummary';
 import MonthlySummary from './MonthlySummary';
@@ -73,8 +72,8 @@ const Dashboard: React.FC = () => {
                     {/* Summary Cards */}
                     <SavingsSummary />
 
-                    {/* Budget Overview */}
-                    <BudgetOverview />
+                    {/* Report Tabs (Budget Overview & Income vs Expenses) */}
+                    <ReportTabs />
 
                     {/* Financial Journey - Only shown in Yearly View */}
                     {data.currentMonth.endsWith('-ALL') && (
@@ -87,9 +86,6 @@ const Dashboard: React.FC = () => {
                             cashBalance={budgetSummary.unallocatedCash}
                         />
                     )}
-
-                    {/* Income vs Expenses Chart */}
-                    <IncomeVsExpenses />
 
                     {/* Category Breakdown */}
                     <CategoryBreakdown />
