@@ -68,8 +68,13 @@ const Dashboard: React.FC = () => {
                     <div className="monthly-summary-container">
                         <MonthlySummary />
                         <YearlySummary />
-                        {!data.currentMonth.endsWith('-ALL') && <IfThisContinues />}
                     </div>
+
+                    {!data.currentMonth.endsWith('-ALL') && (
+                        <div className="projections-container">
+                            <IfThisContinues />
+                        </div>
+                    )}
 
                     {/* Summary Cards */}
                     <SavingsSummary />
@@ -80,15 +85,19 @@ const Dashboard: React.FC = () => {
                     {/* Financial Journey - Only shown in Yearly View */}
                     {data.currentMonth.endsWith('-ALL') && (
                         <>
-                            <FinancialJourney
-                                data={calculateMonthlyTrends(data.incomes, data.expenses)}
-                                expenses={data.expenses}
-                                categories={data.customCategories}
-                                currentMonth={data.currentMonth}
-                                budgetSummary={budgetSummary}
-                                cashBalance={budgetSummary.unallocatedCash}
-                            />
-                            <IfThisContinues />
+                            <div className="financial-journey-container">
+                                <FinancialJourney
+                                    data={calculateMonthlyTrends(data.incomes, data.expenses)}
+                                    expenses={data.expenses}
+                                    categories={data.customCategories}
+                                    currentMonth={data.currentMonth}
+                                    budgetSummary={budgetSummary}
+                                    cashBalance={budgetSummary.unallocatedCash}
+                                />
+                            </div>
+                            <div className="projections-container">
+                                <IfThisContinues />
+                            </div>
                         </>
                     )}
 

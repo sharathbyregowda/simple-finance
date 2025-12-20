@@ -56,7 +56,6 @@ describe('IfThisContinues', () => {
         // Check for UI consistency with MonthlySummary
         expect(container).toHaveClass('border-l-4');
         expect(container).toHaveClass('border-l-primary');
-        expect(container).toHaveClass('mt-8');
 
         expect(screen.getByText(/If This Continues/i)).toBeInTheDocument();
     });

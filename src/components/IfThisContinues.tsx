@@ -57,7 +57,7 @@ const IfThisContinues: React.FC = () => {
     };
 
     return (
-        <div className="card projection-card animate-fade-in mt-8 mb-8 border-l-4 border-l-primary">
+        <div className="card projection-card animate-fade-in mb-8 border-l-4 border-l-primary">
             <div className="chart-tabs mb-6">
                 <button
                     className={`tab-btn ${activeTab === 'projections' ? 'active' : ''}`}

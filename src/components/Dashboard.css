@@ -1085,7 +1085,9 @@
     }
 }
 
-/* Monthly Summary */
-.monthly-summary-container {
+/* Dashboard Containers */
+.monthly-summary-container,
+.projections-container,
+.financial-journey-container {
     grid-column: span 12;
 }
