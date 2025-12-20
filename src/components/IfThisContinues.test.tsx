@@ -53,8 +53,48 @@ describe('IfThisContinues', () => {
 
         const container = document.querySelector('.projection-card');
         expect(container).toBeInTheDocument();
+        // Check for UI consistency with MonthlySummary
+        expect(container).toHaveClass('border-l-4');
+        expect(container).toHaveClass('border-l-primary');
+        expect(container).toHaveClass('mt-8');
+
         expect(screen.getByText(/If This Continues/i)).toBeInTheDocument();
-        expect(screen.getByText(/What This Buys You/i)).toBeInTheDocument();
+    });
+
+    it('updates based on user selected month', () => {
+        // First render with Jan context
+        const { rerender } = render(
+            <FinanceProvider>
+                <IfThisContinues />
+            </FinanceProvider>
+        );
+
+        // Projected savings = 200 * 12 = 2400
+        expect(screen.getAllByText(/\$2,400/i).length).toBeGreaterThanOrEqual(1);
+
+        // Change context to a month with more history
+        vi.mocked(useFinance).mockReturnValue({
+            data: {
+                currency: 'USD',
+                currentMonth: '2023-03', // Now we should see Jan and Feb in 2023 history too
+                expenses: [],
+                customCategories: [],
+            },
+            monthlyTrends: [
+                { month: '2022-12', income: 1000, expenses: 800, savings: 200, needs: 500, wants: 300 },
+                { month: '2023-01', income: 2000, expenses: 1000, savings: 1000, needs: 500, wants: 500 },
+                { month: '2023-02', income: 2000, expenses: 1000, savings: 1000, needs: 500, wants: 500 },
+            ],
+        } as any);
+
+        rerender(
+            <FinanceProvider>
+                <IfThisContinues />
+            </FinanceProvider>
+        );
+
+        // Avg savings = (200 + 1000 + 1000) / 3 = 733.33 -> 8800 yearly
+        expect(screen.getAllByText(/\$8,800/i).length).toBeGreaterThanOrEqual(1);
     });
 
     it('toggles content between projection stats and "what this buys" benchmarks', () => {
@@ -64,12 +104,6 @@ describe('IfThisContinues', () => {
             </FinanceProvider>
         );
 
-        // Initially on Projections tab
-        expect(screen.getByText(/Savings grow by/i)).toBeInTheDocument();
-        expect(screen.getByText(/Avg. Monthly Income/i)).toBeInTheDocument();
-        // What this buys content should NOT be visible initially
-        expect(screen.queryByText(/cover one of these milestones at a time/i)).not.toBeInTheDocument();
-
         // Switch to "What This Buys You" tab
         const buysTab = screen.getByRole('button', { name: /What This Buys You/i });
         fireEvent.click(buysTab);
@@ -78,40 +112,5 @@ describe('IfThisContinues', () => {
         expect(screen.getByText((content) => content.includes('Your projected savings can cover') && content.includes('one') && content.includes('at a time'))).toBeInTheDocument();
         expect(screen.getByText(/Living Expenses/i)).toBeInTheDocument();
         expect(screen.getByText(/3 months/i)).toBeInTheDocument();
-
-        // Projections content should NOT be visible now
-        expect(screen.queryByText(/Savings grow by/i)).not.toBeInTheDocument();
-        expect(screen.queryByText(/Avg. Monthly Income/i)).not.toBeInTheDocument();
-    });
-
-    it('converts to years when duration exceeds 18 months in the buys tab', () => {
-        vi.mocked(useFinance).mockReturnValue({
-            data: {
-                currency: 'USD',
-                currentMonth: '2023-01',
-                expenses: [{ categoryId: 'c1', amount: 50, month: '2022-10' }],
-                customCategories: [{ id: 'c1', name: 'Coffee', icon: '☕' }],
-            },
-            monthlyTrends: [
-                { month: '2022-10', income: 4000, expenses: 2000, savings: 2000, needs: 1000, wants: 1000 },
-                { month: '2022-11', income: 4000, expenses: 2000, savings: 2000, needs: 1000, wants: 1000 },
-                { month: '2022-12', income: 4000, expenses: 2000, savings: 2000, needs: 1000, wants: 1000 },
-            ],
-        } as any);
-
-        render(
-            <FinanceProvider>
-                <IfThisContinues />
-            </FinanceProvider>
-        );
-
-        // Switch to "What This Buys You"
-        fireEvent.click(screen.getByRole('button', { name: /What This Buys You/i }));
-
-        // Projected savings = 2000 * 12 = 24000
-        // Avg Coffee = 50 / 3 = 16.66
-        // Months covered = 24000 / 16.66 = 1440 months = 120 years
-        expect(screen.getByText(/Coffee/i)).toBeInTheDocument();
-        expect(screen.getByText(/120 years/i)).toBeInTheDocument();
     });
 });

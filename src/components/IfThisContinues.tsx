@@ -8,9 +8,9 @@ const IfThisContinues: React.FC = () => {
     const [activeTab, setActiveTab] = React.useState<'projections' | 'buys'>('projections');
 
     const projection = useMemo(() => {
-        const analysisMonths = getAnalysisMonths(monthlyTrends);
+        const analysisMonths = getAnalysisMonths(monthlyTrends, data.currentMonth);
         return calculateProjections(analysisMonths, data.expenses, data.customCategories);
-    }, [monthlyTrends, data.expenses, data.customCategories]);
+    }, [monthlyTrends, data.expenses, data.customCategories, data.currentMonth]);
 
     if (!projection || projection.yearlyProjection <= 0) {
         return null; // Not enough data or no savings projected
@@ -57,7 +57,7 @@ const IfThisContinues: React.FC = () => {
     };
 
     return (
-        <div className="card projection-card animate-fade-in mb-8">
+        <div className="card projection-card animate-fade-in mt-8 mb-8 border-l-4 border-l-primary">
             <div className="chart-tabs mb-6">
                 <button
                     className={`tab-btn ${activeTab === 'projections' ? 'active' : ''}`}

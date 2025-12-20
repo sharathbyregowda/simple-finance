@@ -18,12 +18,20 @@ describe('Projection Logic', () => {
         { month: '2023-07', income: 1000, expenses: 500, savings: 500, needs: 200, wants: 300 }, // Current month (partial)
     ];
 
-    it('getAnalysisMonths excludes current month and limits to 6', () => {
-        const analysis = getAnalysisMonths(mockHistory);
+    it('getAnalysisMonths excludes selected month and limits to 6', () => {
+        const analysis = getAnalysisMonths(mockHistory, '2023-07');
         expect(analysis).toHaveLength(6);
         expect(analysis[0].month).toBe('2023-06');
         expect(analysis[5].month).toBe('2023-01');
         expect(analysis.some(m => m.month === '2023-07')).toBe(false);
+    });
+
+    it('getAnalysisMonths shifts analysis window based on selected month', () => {
+        const analysis = getAnalysisMonths(mockHistory, '2023-04');
+        // Should only see months before April: Mar, Feb, Jan
+        expect(analysis).toHaveLength(3);
+        expect(analysis[0].month).toBe('2023-03');
+        expect(analysis[2].month).toBe('2023-01');
     });
 
     it('getAnalysisMonths excludes months with zero income', () => {
@@ -31,7 +39,7 @@ describe('Projection Logic', () => {
             ...mockHistory,
             { month: '2022-12', income: 0, expenses: 200, savings: -200, needs: 100, wants: 100 },
         ];
-        const analysis = getAnalysisMonths(historyWithZero);
+        const analysis = getAnalysisMonths(historyWithZero, '2023-07');
         expect(analysis.some(m => m.month === '2022-12')).toBe(false);
     });
 

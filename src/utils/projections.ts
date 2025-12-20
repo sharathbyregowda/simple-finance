@@ -1,5 +1,4 @@
 import type { MonthlyData, Expense, CustomCategory } from '../types';
-import { getCurrentMonth } from './calculations';
 
 export interface CategoryCoverage {
     name: string;
@@ -25,14 +24,12 @@ export interface ProjectionResult {
 
 /**
  * Filter and identify the last 3-6 completed months for analysis.
- * Excludes the current month.
+ * Analysis is relative to the selectedMonth (exclusive).
  */
-export const getAnalysisMonths = (history: MonthlyData[], limit: number = 6): MonthlyData[] => {
-    const currentMonth = getCurrentMonth();
-
-    // Filter out current month and months with zero income
+export const getAnalysisMonths = (history: MonthlyData[], selectedMonth: string, limit: number = 6): MonthlyData[] => {
+    // Filter out selected month and future months, and months with zero income
     const completedMonths = history
-        .filter(m => m.month < currentMonth)
+        .filter(m => m.month < selectedMonth)
         .filter(m => m.income > 0)
         .sort((a, b) => b.month.localeCompare(a.month)); // Newest first
 
