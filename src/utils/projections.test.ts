@@ -37,7 +37,7 @@ describe('Projection Logic', () => {
 
     it('calculateProjections returns null if fewer than 3 months exist', () => {
         const sparseHistory = mockHistory.slice(0, 2);
-        const result = calculateProjections(sparseHistory);
+        const result = calculateProjections(sparseHistory, [], []);
         expect(result).toBeNull();
     });
 
@@ -46,11 +46,33 @@ describe('Projection Logic', () => {
         // Avg savings = (200 + 100 + 300) / 3 = 200
         // Yearly = 200 * 12 = 2400
         const analysis = mockHistory.slice(0, 3);
-        const result = calculateProjections(analysis);
+        const result = calculateProjections(analysis, [], []);
 
         expect(result?.averageSavings).toBe(200);
         expect(result?.yearlyProjection).toBe(2400);
-        expect(result?.headline).toBe('Savings grows by ~##AMOUNT##.');
+        expect(result?.headline).toBe('Savings grow by ~##AMOUNT##.');
+    });
+
+    it('calculateProjections handles school fees and time metrics', () => {
+        const history: MonthlyData[] = [
+            { month: '2023-01', income: 4000, expenses: 3000, savings: 1000, needs: 2000, wants: 1000 },
+            { month: '2023-02', income: 4000, expenses: 3000, savings: 1000, needs: 2000, wants: 1000 },
+            { month: '2023-03', income: 4000, expenses: 3000, savings: 1000, needs: 2000, wants: 1000 },
+        ];
+        const expenses: any[] = [
+            { id: '1', amount: 500, description: 'John School Fees', month: '2023-01', categoryId: 'c1', categoryType: 'needs' },
+            { id: '2', amount: 500, description: 'Other', month: '2023-01', categoryId: 'c1', categoryType: 'needs' },
+        ];
+
+        // Projected savings = 1000 * 12 = 12000
+        // Avg expenses = 3000
+        // Months covered = 12000 / 3000 = 4 months
+        // School fees = (500 + 0 + 0) / 3 = 166.66
+        const result = calculateProjections(history, expenses, []);
+
+        expect(result?.timeMetrics.monthsOfLivingExpenses).toBe(4);
+        expect(result?.timeMetrics.emergencyBufferStatus).toBe('Healthy');
+        expect(result?.averageSchoolFees).toBeGreaterThan(160);
     });
 
     it('calculateProjections handles deficit (spending > income)', () => {
@@ -59,10 +81,11 @@ describe('Projection Logic', () => {
             { month: '2023-02', income: 1000, expenses: 1100, savings: -100, needs: 700, wants: 400 },
             { month: '2023-03', income: 1000, expenses: 1300, savings: -300, needs: 900, wants: 400 },
         ];
-        const result = calculateProjections(deficitHistory);
+        const result = calculateProjections(deficitHistory, [], []);
 
         expect(result?.averageSavings).toBe(-200);
         expect(result?.yearlyProjection).toBe(-2400);
         expect(result?.headline).toBe('Spending exceeds income by ~##AMOUNT##.');
+        expect(result?.timeMetrics.monthsOfLivingExpenses).toBe(0); // No buffer if deficit
     });
 });

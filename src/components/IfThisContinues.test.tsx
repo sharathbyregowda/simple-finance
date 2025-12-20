@@ -27,6 +27,8 @@ vi.mock('../context/FinanceContext', async () => {
             data: {
                 currency: 'USD',
                 currentMonth: '2023-01',
+                expenses: [],
+                customCategories: [],
             },
             monthlyTrends: [
                 { month: '2022-10', income: 1000, expenses: 800, savings: 200, needs: 500, wants: 300 },
@@ -62,5 +64,14 @@ describe('IfThisContinues', () => {
         expect(screen.getByText(/your 12-month total savings is projected to be/i)).toBeInTheDocument();
         const amounts = screen.getAllByText(/\$2,400/i);
         expect(amounts.length).toBeGreaterThanOrEqual(1);
+
+        // Verify "What This Buys You" section
+        expect(screen.getByText(/What This Buys You/i)).toBeInTheDocument();
+        // 2400 / 800 (avg expenses) = 3 months
+        expect(screen.getByText(/Living Expenses/i)).toBeInTheDocument();
+        expect(screen.getByText(/3 months/i)).toBeInTheDocument();
+        // Emergency Buffer
+        expect(screen.getByText(/Emergency Buffer/i)).toBeInTheDocument();
+        expect(screen.getByText(/Healthy/i)).toBeInTheDocument();
     });
 });
