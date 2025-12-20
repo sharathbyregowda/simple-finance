@@ -39,7 +39,7 @@ const IfThisContinues: React.FC = () => {
         const { value: displayValue, unit } = formatDuration(value);
 
         return (
-            <div className="time-metric-item mb-4">
+            <div className="time-metric-item">
                 <div className="flex justify-between items-center mb-1 text-sm">
                     <span className="flex items-center gap-2">
                         <span>{icon}</span> {label}
@@ -110,33 +110,25 @@ const IfThisContinues: React.FC = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-                            <div>
-                                {renderTimeBar("Living Expenses", projection.timeMetrics.monthsOfLivingExpenses, 12, "🕒")}
-                                {projection.timeMetrics.topCategoriesCovered[0] && renderTimeBar(
-                                    projection.timeMetrics.topCategoriesCovered[0].name,
-                                    projection.timeMetrics.topCategoriesCovered[0].monthsCovered,
-                                    24,
-                                    projection.timeMetrics.topCategoriesCovered[0].icon
-                                )}
-                            </div>
-                            <div>
-                                {projection.timeMetrics.topCategoriesCovered.slice(1).map((cat) => (
-                                    <React.Fragment key={cat.name}>
-                                        {renderTimeBar(cat.name, cat.monthsCovered, 24, cat.icon)}
-                                    </React.Fragment>
-                                ))}
-                                <div className="time-metric-item">
-                                    <div className="flex justify-between items-center text-sm">
-                                        <span className="flex items-center gap-2">
-                                            <span>🛡️</span> Emergency Buffer
-                                        </span>
-                                        <span className={`font-bold ${projection.timeMetrics.emergencyBufferStatus === 'Strong' ? 'text-success' :
-                                            projection.timeMetrics.emergencyBufferStatus === 'Healthy' ? 'text-primary' : 'text-warning'
-                                            }`}>
-                                            {projection.timeMetrics.emergencyBufferStatus}
-                                        </span>
-                                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                            {renderTimeBar("Living Expenses", projection.timeMetrics.monthsOfLivingExpenses, 12, "🕒")}
+
+                            {projection.timeMetrics.topCategoriesCovered.map((cat) => (
+                                <React.Fragment key={cat.name}>
+                                    {renderTimeBar(cat.name, cat.monthsCovered, 24, cat.icon)}
+                                </React.Fragment>
+                            ))}
+
+                            <div className="time-metric-item">
+                                <div className="flex justify-between items-center text-sm">
+                                    <span className="flex items-center gap-2">
+                                        <span>🛡️</span> Emergency Buffer
+                                    </span>
+                                    <span className={`font-bold ${projection.timeMetrics.emergencyBufferStatus === 'Strong' ? 'text-success' :
+                                        projection.timeMetrics.emergencyBufferStatus === 'Healthy' ? 'text-primary' : 'text-warning'
+                                        }`}>
+                                        {projection.timeMetrics.emergencyBufferStatus}
+                                    </span>
                                 </div>
                             </div>
                         </div>
