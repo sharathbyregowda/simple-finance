@@ -11,37 +11,28 @@ const ReportsPage: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <header className="mb-8">
-                <h2 className="text-2xl font-bold">Reports & Analysis</h2>
-                <p className="text-muted">Deep dive into your financial data.</p>
+            <header className="page-header">
+                <h2 className="page-title">Reports & Analysis</h2>
+                <p className="page-subtitle">Deep dive into your financial data.</p>
             </header>
 
             {/* Page-level Tabs */}
-            <div className="flex gap-4 border-b border-[var(--border-color)] mb-6">
+            <div className="tabs-container">
                 <button
                     onClick={() => setActiveReport('budget')}
-                    className={`pb-3 px-2 font-medium transition-colors relative ${activeReport === 'budget'
-                            ? 'text-blue-400 border-b-2 border-blue-400'
-                            : 'text-muted hover:text-white'
-                        }`}
+                    className={`tab-link ${activeReport === 'budget' ? 'active-budget' : ''}`}
                 >
                     🎯 Budget Goal
                 </button>
                 <button
                     onClick={() => setActiveReport('trends')}
-                    className={`pb-3 px-2 font-medium transition-colors relative ${activeReport === 'trends'
-                            ? 'text-purple-400 border-b-2 border-purple-400'
-                            : 'text-muted hover:text-white'
-                        }`}
+                    className={`tab-link ${activeReport === 'trends' ? 'active-trends' : ''}`}
                 >
                     📈 Trends
                 </button>
                 <button
                     onClick={() => setActiveReport('savings')}
-                    className={`pb-3 px-2 font-medium transition-colors relative ${activeReport === 'savings'
-                            ? 'text-emerald-400 border-b-2 border-emerald-400'
-                            : 'text-muted hover:text-white'
-                        }`}
+                    className={`tab-link ${activeReport === 'savings' ? 'active-savings' : ''}`}
                 >
                     💰 Savings Goal
                 </button>
@@ -63,7 +54,7 @@ const ReportsPage: React.FC = () => {
                 )}
 
                 {activeReport === 'savings' && (
-                    <div className="card max-w-2xl mx-auto">
+                    <div className="card max-w-2xl mx-auto" style={{ maxWidth: '42rem', margin: '0 auto' }}>
                         <SavingsGoalCalculator />
                     </div>
                 )}

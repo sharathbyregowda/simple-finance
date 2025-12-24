@@ -8,28 +8,29 @@ const TransactionsPage: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <header className="mb-8 flex justify-between items-end">
+            <header className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                 <div>
-                    <h2 className="text-2xl font-bold">Transactions</h2>
-                    <p className="text-muted">Manage your income and expenses.</p>
+                    <h2 className="page-title">Transactions</h2>
+                    <p className="page-subtitle">Manage your income and expenses.</p>
                 </div>
                 <button
                     onClick={() => setShowIncomeForm(!showIncomeForm)}
-                    className="btn btn-secondary md:hidden"
+                    className="btn btn-secondary"
+                    style={{ display: window.innerWidth >= 768 ? 'none' : 'block' }} // Simple inline toggle for now
                 >
                     {showIncomeForm ? 'Hide Income Form' : 'Add Income'}
                 </button>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="transactions-grid">
                 {/* Left Column: Data Entry (Sticky on Desktop) */}
-                <div className={`lg:col-span-4 ${showIncomeForm ? 'block' : 'hidden md:block'}`}>
-                    <div className="sticky top-6 space-y-6">
+                <div className={`income-form-section sticky-column ${showIncomeForm ? 'block' : 'hidden-mobile'}`} style={{ display: showIncomeForm ? 'block' : undefined }}>
+                    <div className="space-y-6">
                         <IncomeForm />
                         {/* We could move the Expense Form part of ExpenseLedger here if we refactor,
                             but for now sticking to the existing component structure */}
-                        <div className="p-4 bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)]">
-                            <p className="text-sm text-muted">
+                        <div className="card" style={{ padding: '1rem' }}>
+                            <p className="text-sm text-muted" style={{ margin: 0, fontSize: '0.875rem' }}>
                                 Tip: Use the ledger on the right (or below) to add expenses quickly.
                             </p>
                         </div>
@@ -37,7 +38,7 @@ const TransactionsPage: React.FC = () => {
                 </div>
 
                 {/* Right Column: Ledger and Expense Entry */}
-                <div className="lg:col-span-8">
+                <div className="ledger-section">
                     <ExpenseLedger />
                 </div>
             </div>

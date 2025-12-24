@@ -23,44 +23,31 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     ];
 
     return (
-        <div className="flex h-screen bg-[var(--bg-app)] text-[var(--color-text-primary)]">
+        <div className="app-layout">
             {/* Sidebar Navigation */}
-            <aside
-                className={`
-                    fixed inset-y-0 left-0 z-50 w-64 bg-[var(--bg-card)] border-r border-[var(--border-color)] 
-                    transform transition-transform duration-300 ease-in-out
-                    ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-                    md:relative md:translate-x-0
-                `}
-            >
-                <div className="flex flex-col h-full">
+            <aside className={`sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+                <div className="flex flex-col h-full" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                     {/* Logo Area */}
-                    <div className="p-6 border-b border-[var(--border-color)] flex justify-between items-center">
+                    <div className="sidebar-header">
                         <div>
-                            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                            <h1 className="brand-title">
                                 Simple Finance
                             </h1>
-                            <p className="text-xs text-muted">Family Planning</p>
+                            <p className="brand-subtitle">Family Planning</p>
                         </div>
-                        <button onClick={toggleMobileMenu} className="md:hidden text-muted hover:text-white">
+                        <button onClick={toggleMobileMenu} className="md:hidden text-muted hover:text-white" style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', display: 'none' /* Handled by media query via class if needed, but keeping simple for now */ }}>
                             <X size={24} />
                         </button>
                     </div>
 
                     {/* Navigation Links */}
-                    <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <nav className="sidebar-nav">
                         {navItems.map((item) => (
                             <NavLink
                                 key={item.to}
                                 to={item.to}
                                 onClick={() => setIsMobileMenuOpen(false)}
-                                className={({ isActive }) => `
-                                    flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
-                                    ${isActive
-                                        ? 'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-400 border-l-4 border-blue-500'
-                                        : 'text-muted hover:bg-white/5 hover:text-white'
-                                    }
-                                `}
+                                className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                             >
                                 {item.icon}
                                 <span className="font-medium">{item.label}</span>
@@ -69,14 +56,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     </nav>
 
                     {/* Month Selector (Sidebar Footer) */}
-                    <div className="p-4 border-t border-[var(--border-color)] bg-black/20">
-                        <label className="text-xs text-muted uppercase tracking-wider font-semibold mb-2 block">
+                    <div className="sidebar-footer">
+                        <label className="text-xs text-muted uppercase tracking-wider font-semibold mb-2 block" style={{ display: 'block', fontSize: '0.75rem', marginBottom: '8px', opacity: 0.7 }}>
                             Viewing Period
                         </label>
                         <select
                             className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-lg p-2 text-sm focus:outline-none focus:border-blue-500"
                             value={data.currentMonth}
                             onChange={(e) => setCurrentMonth(e.target.value)}
+                            style={{ width: '100%', padding: '8px', borderRadius: '8px', background: 'var(--bg-app)', border: '1px solid var(--border-color)', color: 'var(--color-text-primary)' }}
                         >
                             {(() => {
                                 const months = Array.from(
@@ -104,18 +92,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+            <main className="main-content">
                 {/* Mobile Header */}
-                <div className="md:hidden p-4 border-b border-[var(--border-color)] bg-[var(--bg-card)] flex justify-between items-center">
+                <div className="mobile-header">
                     <span className="font-bold">Simple Finance</span>
-                    <button onClick={toggleMobileMenu} className="text-white">
+                    <button onClick={toggleMobileMenu} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>
                         <Menu size={24} />
                     </button>
                 </div>
 
                 {/* Content Scroller */}
-                <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth">
-                    <div className="max-w-7xl mx-auto animate-fade-in">
+                <div className="content-scroll-area">
+                    <div className="page-container">
                         {children}
                     </div>
                 </div>
@@ -124,7 +112,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Overlay for mobile menu */}
             {isMobileMenuOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+                    className="overlay"
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
             )}

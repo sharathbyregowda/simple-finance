@@ -14,9 +14,9 @@ const DashboardPage: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <header className="mb-8">
-                <h2 className="text-2xl font-bold">Dashboard</h2>
-                <p className="text-muted">Your financial health at a glance.</p>
+            <header className="page-header">
+                <h2 className="page-title">Dashboard</h2>
+                <p className="page-subtitle">Your financial health at a glance.</p>
             </header>
 
             <div className="dashboard-grid">

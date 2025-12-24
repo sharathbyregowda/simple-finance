@@ -5,16 +5,16 @@ import '../components/Dashboard.css';
 
 const SettingsPage: React.FC = () => {
     return (
-        <div className="space-y-8 max-w-4xl mx-auto">
-            <header className="mb-8">
-                <h2 className="text-2xl font-bold">Settings</h2>
-                <p className="text-muted">Configure your currency, categories and data.</p>
+        <div className="space-y-8" style={{ maxWidth: '56rem', margin: '0 auto' }}>
+            <header className="page-header">
+                <h2 className="page-title">Settings</h2>
+                <p className="page-subtitle">Configure your currency, categories and data.</p>
             </header>
 
             <Settings />
 
-            <div className="pt-8 border-t border-[var(--border-color)]">
-                <h3 className="text-xl font-bold mb-6">Category Management</h3>
+            <div style={{ paddingTop: '2rem', borderTop: '1px solid var(--border-color)' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem' }}>Category Management</h3>
                 <CategoryManager />
             </div>
         </div>
