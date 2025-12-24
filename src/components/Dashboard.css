@@ -194,8 +194,13 @@
         transform: translateX(0);
     }
 
-    .mobile-header {
-        display: flex;
+    /* Show mobile elements */
+    .mobile-menu-btn {
+        display: block !important;
+    }
+
+    .mobile-brand {
+        display: inline-block !important;
     }
 
     .content-scroll-area {
@@ -208,6 +213,10 @@
 
     .main-content {
         height: 100%;
+    }
+
+    .main-header {
+        padding: var(--spacing-md) !important;
     }
 }
 

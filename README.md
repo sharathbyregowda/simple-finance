@@ -5,15 +5,24 @@ A modern, privacy-focused personal finance tracker built to help you master the 
 ![Simple Finance Dashboard](https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=2000)
 *(Replace with actual dashboard screenshot)*
 
-## ✨ Features
+## Features 🌟
 
-- **📊 Smart Budgeting**: Automatically categorizes spending into **Needs (50%)**, **Wants (30%)**, and **Savings (20%)**.
-- **⚡️ Expense Ledger**: A high-speed, Excel-like interface for rapid data entry and inline editing.
-- **📈 Visual Analytics**: Interactive charts for monthly trends, category breakdowns, and income vs. expenses.
-- **🛡️ Privacy First**: Your data lives in your browser (`localStorage`). No servers, no accounts, no tracking.
-- **💾 Backup & Restore**: Export your financial history to JSON and restore it on any device.
-- **📅 Yearly Overview**: Cumulative views to track your progress over the entire year.
-- **🏔️ Financial Journey**: Discover your unique **Financial Persona** based on your yearly spending habits inside the Yearly Overview.
+- **App Shell Architecture**: A modern, responsive layout with sidebar navigation and dedicated workspaces.
+- **Dashboard**: High-level financial health check.
+    - **Savings Summary**: Instant view of your net savings and rates.
+    - **Monthly Summary**: Clear, English-language breakdown of your spending.
+    - **Smart Projections**: "If this continues" forecast alongside a **Savings Goal Calculator**.
+- **Reports & Analysis**: Deep dives into your data.
+    - **Budget vs Actual**: Visual progress bars for Needs, Wants, and Savings.
+    - **Income vs Expenses**: Trend analysis over time.
+- **Transactions Workspace**:
+    - **Income Management**: Log multiple income sources.
+    - **Expense Ledger**: Detailed record of all spending.
+    - **Filtering**: Sort and filter by date, category, or amount.
+- **Settings & Configuration**:
+    - **Currency Support**: Choose your preferred currency symbol (£, $, €, etc.).
+    - **Custom Categories**: Manage your own spending categories with emoji support.
+    - **Data Management**: Import/Export your data safely.
 
 ## 🚀 Tech Stack
 

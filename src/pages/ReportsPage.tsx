@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import BudgetOverview from '../components/BudgetOverview';
 import IncomeVsExpenses from '../components/IncomeVsExpenses';
-import SavingsGoalCalculator from '../components/SavingsGoalCalculator';
 import '../components/Dashboard.css';
 
 type ReportType = 'budget' | 'trends' | 'savings';
@@ -30,12 +29,6 @@ const ReportsPage: React.FC = () => {
                 >
                     📈 Trends
                 </button>
-                <button
-                    onClick={() => setActiveReport('savings')}
-                    className={`tab-link ${activeReport === 'savings' ? 'active-savings' : ''}`}
-                >
-                    💰 Savings Goal
-                </button>
             </div>
 
             {/* Report Content */}
@@ -50,12 +43,6 @@ const ReportsPage: React.FC = () => {
                 {activeReport === 'trends' && (
                     <div className="card report-tabs-card">
                         <IncomeVsExpenses standalone={false} />
-                    </div>
-                )}
-
-                {activeReport === 'savings' && (
-                    <div className="card max-w-2xl mx-auto" style={{ maxWidth: '42rem', margin: '0 auto' }}>
-                        <SavingsGoalCalculator />
                     </div>
                 )}
             </div>

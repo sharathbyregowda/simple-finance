@@ -55,51 +55,81 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         ))}
                     </nav>
 
-                    {/* Month Selector (Sidebar Footer) */}
-                    <div className="sidebar-footer">
-                        <label className="text-xs text-muted uppercase tracking-wider font-semibold mb-2 block" style={{ display: 'block', fontSize: '0.75rem', marginBottom: '8px', opacity: 0.7 }}>
-                            Viewing Period
-                        </label>
-                        <select
-                            className="w-full bg-[var(--bg-app)] border border-[var(--border-color)] rounded-lg p-2 text-sm focus:outline-none focus:border-blue-500"
-                            value={data.currentMonth}
-                            onChange={(e) => setCurrentMonth(e.target.value)}
-                            style={{ width: '100%', padding: '8px', borderRadius: '8px', background: 'var(--bg-app)', border: '1px solid var(--border-color)', color: 'var(--color-text-primary)' }}
-                        >
-                            {(() => {
-                                const months = Array.from(
-                                    new Set([
-                                        ...data.expenses.map((e) => e.month),
-                                        ...data.incomes.map((i) => i.month),
-                                        data.currentMonth,
-                                    ])
-                                ).filter((m) => !m.endsWith('-ALL'));
-
-                                const years = Array.from(new Set(months.map((m) => m.split('-')[0])));
-                                years.forEach((year) => months.push(`${year}-ALL`));
-
-                                return months
-                                    .sort((a, b) => b.localeCompare(a))
-                                    .map((month) => (
-                                        <option key={month} value={month}>
-                                            {formatMonth(month)}
-                                        </option>
-                                    ));
-                            })()}
-                        </select>
-                    </div>
                 </div>
             </aside>
 
             {/* Main Content Area */}
             <main className="main-content">
-                {/* Mobile Header */}
-                <div className="mobile-header">
-                    <span className="font-bold">Simple Finance</span>
-                    <button onClick={toggleMobileMenu} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>
-                        <Menu size={24} />
-                    </button>
-                </div>
+                {/* Main Header (Logo/Menu on Mobile, Selector on Desktop) */}
+                <header className="main-header" style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: 'var(--spacing-md) var(--spacing-xl)',
+                    borderBottom: '1px solid var(--border-color)',
+                    backgroundColor: 'var(--bg-card)',
+                    minHeight: '4rem'
+                }}>
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={toggleMobileMenu}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                color: 'inherit',
+                                cursor: 'pointer',
+                                display: 'none' // Hidden by default (desktop)
+                            }}
+                            className="mobile-menu-btn" // We'll add media query for this class if needed, or inline style logic
+                        >
+                            <Menu size={24} />
+                        </button>
+                        <span className="font-bold md:hidden mobile-brand" style={{ display: 'none' }}>Simple Finance</span>
+                    </div>
+
+                    {/* Desktop/Global Actions */}
+                    <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginLeft: 'auto' }}>
+                        <div className="month-selector-group" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <label className="text-sm text-muted font-medium" style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+                                Period:
+                            </label>
+                            <select
+                                className="bg-[var(--bg-app)] border border-[var(--border-color)] rounded-lg p-2 text-sm focus:outline-none focus:border-blue-500"
+                                value={data.currentMonth}
+                                onChange={(e) => setCurrentMonth(e.target.value)}
+                                style={{
+                                    padding: '6px 12px',
+                                    borderRadius: '6px',
+                                    background: 'var(--bg-app)',
+                                    border: '1px solid var(--border-color)',
+                                    color: 'var(--color-text-primary)',
+                                    minWidth: '140px'
+                                }}
+                            >
+                                {(() => {
+                                    const months = Array.from(
+                                        new Set([
+                                            ...data.expenses.map((e) => e.month),
+                                            ...data.incomes.map((i) => i.month),
+                                            data.currentMonth,
+                                        ])
+                                    ).filter((m) => !m.endsWith('-ALL'));
+
+                                    const years = Array.from(new Set(months.map((m) => m.split('-')[0])));
+                                    years.forEach((year) => months.push(`${year}-ALL`));
+
+                                    return months
+                                        .sort((a, b) => b.localeCompare(a))
+                                        .map((month) => (
+                                            <option key={month} value={month}>
+                                                {formatMonth(month)}
+                                            </option>
+                                        ));
+                                })()}
+                            </select>
+                        </div>
+                    </div>
+                </header>
 
                 {/* Content Scroller */}
                 <div className="content-scroll-area">
