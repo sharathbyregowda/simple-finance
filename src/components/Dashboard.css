@@ -223,6 +223,10 @@
     .main-header {
         padding: var(--spacing-md) !important;
     }
+
+    .hidden-mobile {
+        display: none !important;
+    }
 }
 
 .overlay {

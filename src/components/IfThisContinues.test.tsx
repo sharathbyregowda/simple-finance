@@ -45,17 +45,18 @@ describe('IfThisContinues', () => {
     });
 
     it('renders with the correct projection card class for layout consistency', () => {
-        render(
+        const { container } = render(
             <FinanceProvider>
                 <IfThisContinues />
             </FinanceProvider>
         );
 
-        const container = document.querySelector('.projection-card');
-        expect(container).toBeInTheDocument();
-        // Check for UI consistency with MonthlySummary
-        expect(container).toHaveClass('border-l-4');
-        expect(container).toHaveClass('border-l-primary');
+        // resulting HTML matches the component structure
+        const component = container.firstChild as HTMLElement;
+        expect(component).toBeInTheDocument();
+        expect(component).toHaveClass('projection-component');
+        expect(component).toHaveClass('border-l-4');
+        expect(component).toHaveClass('border-l-primary');
 
         expect(screen.getByText(/If This Continues/i)).toBeInTheDocument();
     });

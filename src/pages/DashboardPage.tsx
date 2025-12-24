@@ -81,7 +81,7 @@ const DashboardPage: React.FC = () => {
                              Based on original code: !isYearly && (projections). 
                              So keeping that condition for the container. 
                           */}
-                        <div className="projections-container">
+                        <div className="projections-container card">
                             <IfThisContinues />
                         </div>
                     </>

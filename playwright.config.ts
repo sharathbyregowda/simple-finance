@@ -16,10 +16,15 @@ export default defineConfig({
             name: 'chromium',
             use: { ...devices['Desktop Chrome'] },
         },
+        // {
+        //   name: 'webkit',
+        //   use: { ...devices['Desktop Safari'] },
+        // },
     ],
     webServer: {
         command: 'npm run dev',
         url: 'http://localhost:5173',
         reuseExistingServer: !process.env.CI,
+        timeout: 120 * 1000,
     },
 });

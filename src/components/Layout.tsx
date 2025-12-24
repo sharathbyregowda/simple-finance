@@ -33,7 +33,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                             <h1 className="brand-title">
                                 Simple Finance
                             </h1>
-                            <p className="brand-subtitle">Family Planning</p>
+                            <p className="brand-subtitle">Clear money reviews over time</p>
                         </div>
                         <button onClick={toggleMobileMenu} className="md:hidden text-muted hover:text-white" style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', display: 'none' /* Handled by media query via class if needed, but keeping simple for now */ }}>
                             <X size={24} />
