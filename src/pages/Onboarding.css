@@ -243,7 +243,7 @@
     border-radius: 9999px;
     display: flex;
     align-items: center;
-    justify-center;
+    justify-content: center;
     margin: 0 auto 1.5rem;
     box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
 }
