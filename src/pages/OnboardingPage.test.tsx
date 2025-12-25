@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import OnboardingPage from './OnboardingPage';
@@ -46,38 +46,44 @@ describe('OnboardingPage', () => {
         vi.clearAllMocks();
     });
 
-    it('renders the first step (Currency) initially', () => {
+    it('renders the first step with app branding', () => {
         render(
             <BrowserRouter>
                 <OnboardingPage />
             </BrowserRouter>
         );
-        expect(screen.getByText(/Review your money/i)).toBeDefined();
-        expect(screen.getByText(/Choose your Currency/i)).toBeDefined();
+        expect(screen.getByText('Simple Finance')).toBeDefined();
+        expect(screen.getByText('Setup Wizard')).toBeDefined();
+        expect(screen.getByText(/Welcome to Simple Finance/i)).toBeDefined();
+        expect(screen.getByText(/Step 1: Choose your Currency/i)).toBeDefined();
     });
 
     it('navigates through the steps', () => {
-        render(
+        const { container } = render(
             <BrowserRouter>
                 <OnboardingPage />
             </BrowserRouter>
         );
 
-        // Step 1 -> 2
-        fireEvent.click(screen.getByText(/Get Started/i));
-        expect(screen.getByText(/Review Categories/i)).toBeDefined();
+        // Step 1 -> 2 (only one Continue button on first step)
+        const continueButtons1 = screen.getAllByRole('button', { name: /Continue/i });
+        fireEvent.click(continueButtons1[continueButtons1.length - 1]);
+        expect(screen.getByText(/Step 2: Review Categories/i)).toBeDefined();
 
-        // Step 2 -> 3
-        fireEvent.click(screen.getByText(/Next: Add Income/i));
-        expect(screen.getByText(/Add Income/i)).toBeDefined();
+        // Step 2 -> 3 (now we have Back and Continue)
+        const continueButtons2 = screen.getAllByRole('button', { name: /Continue/i });
+        fireEvent.click(continueButtons2[continueButtons2.length - 1]);
+        expect(screen.getByText(/Step 3: Add Your Income/i)).toBeDefined();
 
         // Step 3 -> 4
-        fireEvent.click(screen.getByText(/Next: Add Expenses/i));
-        expect(screen.getByText(/Add Expenses/i)).toBeDefined();
+        const continueButtons3 = screen.getAllByRole('button', { name: /Continue/i });
+        fireEvent.click(continueButtons3[continueButtons3.length - 1]);
+        expect(screen.getByText(/Step 4: Add Your Expenses/i)).toBeDefined();
 
         // Step 4 -> 5
-        fireEvent.click(screen.getByText(/See Your Data/i));
-        expect(screen.getByText(/Step 5/i)).toBeDefined();
+        const continueButtons4 = screen.getAllByRole('button', { name: /Continue/i });
+        fireEvent.click(continueButtons4[continueButtons4.length - 1]);
+        expect(screen.getByText(/You're All Set!/i)).toBeDefined();
     });
 
     it('calls completeOnboarding when finished', () => {
@@ -87,13 +93,15 @@ describe('OnboardingPage', () => {
             </BrowserRouter>
         );
 
-        // Fast forward to last step
-        fireEvent.click(screen.getByText(/Get Started/i)); // 1->2
-        fireEvent.click(screen.getByText(/Next: Add Income/i)); // 2->3
-        fireEvent.click(screen.getByText(/Next: Add Expenses/i)); // 3->4
-        fireEvent.click(screen.getByText(/See Your Data/i)); // 4->5
+        // Navigate through all steps
+        for (let i = 0; i < 4; i++) {
+            const continueButtons = screen.getAllByRole('button', { name: /Continue/i });
+            fireEvent.click(continueButtons[continueButtons.length - 1]);
+        }
 
-        fireEvent.click(screen.getByText(/Go to Dashboard/i));
+        // Click final button
+        const dashboardButton = screen.getByRole('button', { name: /Go to Dashboard/i });
+        fireEvent.click(dashboardButton);
         expect(mockCompleteOnboarding).toHaveBeenCalled();
     });
 });
