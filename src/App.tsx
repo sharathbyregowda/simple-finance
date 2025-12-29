@@ -5,6 +5,7 @@ import Layout from './components/Layout';
 import DashboardPage from './pages/DashboardPage';
 import ReportsPage from './pages/ReportsPage';
 import TransactionsPage from './pages/TransactionsPage';
+import CalculatorsPage from './pages/CalculatorsPage';
 import SettingsPage from './pages/SettingsPage';
 import AboutPage from './pages/AboutPage';
 import OnboardingPage from './pages/OnboardingPage';
@@ -45,6 +46,7 @@ const AppRoutes: React.FC = () => {
               <Route path="/" element={<DashboardPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/transactions" element={<TransactionsPage />} />
+              <Route path="/calculators" element={<CalculatorsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />

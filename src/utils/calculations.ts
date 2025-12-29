@@ -311,3 +311,79 @@ const getCategoryColor = (type: import('../types').ExpenseCategory): string => {
     }
 };
 
+/**
+ * Calculate average monthly cash balance growth
+ * Cash balance = Income - Expenses - Savings Contributions
+ * This is the unallocated cash remaining after all spending and savings
+ * Returns average cash balance growth across completed months
+ */
+export const calculateAverageMonthlyCashBalance = (
+    incomes: Income[],
+    expenses: Expense[],
+    excludeCurrentMonth: boolean = true
+): number => {
+    const monthlyHistory = calculateMonthlyTrends(incomes, expenses);
+
+    let months = monthlyHistory;
+    if (excludeCurrentMonth) {
+        const current = getCurrentMonth();
+        months = months.filter(m => m.month < current);
+    }
+
+    if (months.length === 0) return 0;
+
+    // For each month, calculate cash balance
+    // Cash balance = Income - Expenses (Needs + Wants) - Savings Contributions
+    // Note: monthlyHistory.expenses already excludes savings contributions
+    // Note: monthlyHistory.savings contains the savings contributions
+    const cashBalances = months.map(month => {
+        const actualBreakdown = calculateActualBreakdown(
+            expenses.filter(e => e.month === month.month)
+        );
+        // Cash balance = Income - Total Expenses - Savings Contributions
+        return month.income - month.expenses - actualBreakdown.savings;
+    });
+
+    const totalCashBalance = cashBalances.reduce((sum, balance) => sum + balance, 0);
+    return totalCashBalance / months.length;
+};
+
+/**
+ * Calculate months needed to reach a savings goal based on cash balance growth
+ */
+export const calculateGoalTimeline = (
+    goalAmount: number,
+    startingBalance: number,
+    averageMonthlyCashBalance: number
+): { months: number; isAchievable: boolean; message: string; completionDate?: Date } => {
+    if (startingBalance >= goalAmount) {
+        return {
+            months: 0,
+            isAchievable: true,
+            message: "You've already reached this goal! 🎉"
+        };
+    }
+
+    const remaining = goalAmount - startingBalance;
+
+    if (averageMonthlyCashBalance <= 0) {
+        return {
+            months: -1,
+            isAchievable: false,
+            message: "Based on your data, you're not currently building cash balance. Reduce expenses or increase income to reach this goal."
+        };
+    }
+
+    const months = Math.ceil(remaining / averageMonthlyCashBalance);
+
+    // Calculate estimated completion date
+    const completionDate = new Date();
+    completionDate.setMonth(completionDate.getMonth() + months);
+
+    return {
+        months,
+        isAchievable: true,
+        message: `At your current pace, you will reach this goal in ${months} month${months !== 1 ? 's' : ''}.`,
+        completionDate
+    };
+};

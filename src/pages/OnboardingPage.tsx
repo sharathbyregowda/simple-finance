@@ -121,7 +121,7 @@ const OnboardingPage: React.FC = () => {
                 </p>
 
                 <div className="founders-letter-signoff">
-                    Thanks for using it — SB
+                    Thanks for using it — Sharath
                 </div>
 
                 <p className="founders-letter-footnote">
