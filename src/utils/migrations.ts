@@ -2,7 +2,7 @@ import { ExpenseCategory, type FinancialData } from '../types';
 import { DEFAULT_CATEGORIES } from './defaultCategories';
 import { saveFinancialData } from './localStorage';
 
-export const CURRENT_DATA_VERSION = 4;
+export const CURRENT_DATA_VERSION = 5;
 
 export const migrateData = (savedData: FinancialData): FinancialData => {
     let migratedData = { ...savedData };
@@ -56,6 +56,16 @@ export const migrateData = (savedData: FinancialData): FinancialData => {
         console.log('Migrating data to version 4 (OOTB Expansion)...');
         // The "missing defaults" logic below will handle adding the new categories
         migratedData.version = 4;
+        hasChanges = true;
+    }
+
+    // Migration 5: Add Recurring Transactions support
+    if (migratedData.version < 5) {
+        console.log('Migrating data to version 5 (Recurring Transactions)...');
+        if (!migratedData.recurringTransactions) {
+            migratedData.recurringTransactions = [];
+        }
+        migratedData.version = 5;
         hasChanges = true;
     }
 

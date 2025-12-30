@@ -72,6 +72,32 @@ export interface MonthlyData {
   wants: number;
 }
 
+// Recurring Transactions
+export type RecurrenceFrequency = 'monthly'; // Future: 'weekly' | 'biweekly' | 'annual'
+
+export interface RecurringTransaction {
+  id: string;
+  type: 'income' | 'expense';
+  amount: number;
+
+  // For income
+  source?: string;
+
+  // For expense
+  description?: string;
+  categoryId?: string;
+  subcategoryId?: string;
+
+  // Schedule
+  frequency: RecurrenceFrequency;
+  dayOfMonth: number; // 1-28 (avoid 29-31 edge cases)
+
+  // Tracking
+  isActive: boolean;
+  lastAppliedMonth?: string; // YYYY-MM format - tracks when last applied
+  createdAt: string; // ISO date string
+}
+
 export interface FinancialData {
   incomes: Income[];
   expenses: Expense[];
@@ -80,6 +106,7 @@ export interface FinancialData {
   currency: string; // Currency code (USD, EUR, GBP, INR, etc.)
   isOnboarded?: boolean; // Track if user has completed onboarding
   version?: number; // Data schema version for migrations
+  recurringTransactions?: RecurringTransaction[]; // Recurring transaction templates
 }
 
 export interface CategoryHierarchy {

@@ -153,7 +153,7 @@ describe('migrations', () => {
             } as FinancialData;
 
             const result = migrateData(v3Data);
-            expect(result.version).toBe(4);
+            expect(result.version).toBe(CURRENT_DATA_VERSION);
 
             // Should have added new defaults like sub-house-1
             const newSub = result.customCategories.find(c => c.id === 'sub-house-1');

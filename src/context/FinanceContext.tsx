@@ -8,6 +8,7 @@ import type {
     BudgetSummary,
     MonthlyData,
     CategoryHierarchy,
+    RecurringTransaction,
 } from '../types';
 import { saveFinancialData, loadFinancialData } from '../utils/localStorage';
 import { migrateData, CURRENT_DATA_VERSION } from '../utils/migrations';
@@ -43,6 +44,13 @@ interface FinanceContextType {
     completeOnboarding: () => void;
     clearAllData: () => void;
     importData: (data: FinancialData) => void;
+
+    // Recurring transaction methods
+    addRecurringTransaction: (transaction: Omit<RecurringTransaction, 'id' | 'createdAt'>) => void;
+    updateRecurringTransaction: (id: string, updates: Partial<RecurringTransaction>) => void;
+    deleteRecurringTransaction: (id: string) => void;
+    applyRecurringTransactions: (month: string) => { applied: number; skipped: number };
+    getPendingRecurringTransactions: (month: string) => RecurringTransaction[];
 }
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
@@ -83,6 +91,7 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
             currency: 'USD',
             isOnboarded: false, // New users start as not onboarded
             version: CURRENT_DATA_VERSION,
+            recurringTransactions: [],
         };
     });
 
@@ -289,6 +298,7 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
             customCategories: DEFAULT_CATEGORIES,
             currentMonth: getCurrentMonth(),
             currency: 'USD',
+            recurringTransactions: [],
         });
     };
 
@@ -309,10 +319,94 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
             currency: newData.currency || 'USD',
             // If isOnboarded is not in the backup, default to true 
             // (since they have data, they must have been onboarded)
-            isOnboarded: newData.isOnboarded !== undefined ? newData.isOnboarded : true
+            isOnboarded: newData.isOnboarded !== undefined ? newData.isOnboarded : true,
+            recurringTransactions: newData.recurringTransactions || [],
         };
 
         setData(mergedData);
+    };
+
+    // Recurring Transaction Methods
+    const addRecurringTransaction = (transaction: Omit<RecurringTransaction, 'id' | 'createdAt'>) => {
+        const newTransaction: RecurringTransaction = {
+            ...transaction,
+            id: `recurring-${Date.now()}-${Math.random()}`,
+            createdAt: new Date().toISOString(),
+        };
+        setData((prev) => ({
+            ...prev,
+            recurringTransactions: [...(prev.recurringTransactions || []), newTransaction],
+        }));
+    };
+
+    const updateRecurringTransaction = (id: string, updates: Partial<RecurringTransaction>) => {
+        setData((prev) => ({
+            ...prev,
+            recurringTransactions: (prev.recurringTransactions || []).map((rt) =>
+                rt.id === id ? { ...rt, ...updates } : rt
+            ),
+        }));
+    };
+
+    const deleteRecurringTransaction = (id: string) => {
+        setData((prev) => ({
+            ...prev,
+            recurringTransactions: (prev.recurringTransactions || []).filter((rt) => rt.id !== id),
+        }));
+    };
+
+    const getPendingRecurringTransactions = (month: string): RecurringTransaction[] => {
+        return (data.recurringTransactions || []).filter((rt) => {
+            // Only active transactions
+            if (!rt.isActive) return false;
+            // Not already applied for this month
+            if (rt.lastAppliedMonth === month) return false;
+            return true;
+        });
+    };
+
+    const applyRecurringTransactions = (month: string): { applied: number; skipped: number } => {
+        const pending = getPendingRecurringTransactions(month);
+        let applied = 0;
+        let skipped = 0;
+
+        pending.forEach((rt) => {
+            // Calculate the actual date for this transaction
+            const [year, monthNum] = month.split('-');
+            const daysInMonth = new Date(parseInt(year), parseInt(monthNum), 0).getDate();
+            const dayOfMonth = Math.min(rt.dayOfMonth, daysInMonth);
+            const transactionDate = `${month}-${String(dayOfMonth).padStart(2, '0')}`;
+
+            if (rt.type === 'income' && rt.source) {
+                addIncome({
+                    amount: rt.amount,
+                    source: rt.source,
+                    date: transactionDate,
+                });
+                applied++;
+            } else if (rt.type === 'expense' && rt.categoryId) {
+                const category = data.customCategories.find((c) => c.id === rt.categoryId);
+                if (category) {
+                    addExpense({
+                        amount: rt.amount,
+                        description: rt.description || '',
+                        categoryId: rt.categoryId,
+                        subcategoryId: rt.subcategoryId,
+                        date: transactionDate,
+                    });
+                    applied++;
+                } else {
+                    skipped++;
+                }
+            } else {
+                skipped++;
+            }
+
+            // Mark as applied for this month
+            updateRecurringTransaction(rt.id, { lastAppliedMonth: month });
+        });
+
+        return { applied, skipped };
     };
 
     const value: FinanceContextType = {
@@ -336,6 +430,12 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
         completeOnboarding,
         clearAllData,
         importData,
+        // Recurring transaction methods
+        addRecurringTransaction,
+        updateRecurringTransaction,
+        deleteRecurringTransaction,
+        applyRecurringTransactions,
+        getPendingRecurringTransactions,
     };
 
     return <FinanceContext.Provider value={value}>{children}</FinanceContext.Provider>;

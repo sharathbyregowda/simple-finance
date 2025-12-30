@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFinance } from '../context/FinanceContext';
-import { Settings as SettingsIcon, Check, Download, Upload, RotateCcw } from 'lucide-react';
+import { Settings as SettingsIcon, Check, Download, Upload, RotateCcw, RefreshCw } from 'lucide-react';
 import { CURRENCIES } from '../utils/currency';
 import CurrencySelector from './CurrencySelector';
 import './Dashboard.css';
@@ -97,6 +97,8 @@ const Settings: React.FC = () => {
         event.target.value = '';
     };
 
+    const recurringCount = (data.recurringTransactions || []).filter(rt => rt.isActive).length;
+
     return (
         <div className="card settings-card">
             <div className="flex justify-between items-center" style={{ marginBottom: 'var(--spacing-lg)' }}>
@@ -120,6 +122,22 @@ const Settings: React.FC = () => {
                         <p className="text-muted" style={{ fontSize: '0.75rem', marginTop: 'var(--spacing-xs)' }}>
                             Choose your preferred currency for displaying amounts
                         </p>
+                    </div>
+
+                    <div className="form-group" style={{ marginTop: 'var(--spacing-lg)', paddingTop: 'var(--spacing-lg)', borderTop: '1px solid var(--border-color)' }}>
+                        <label className="label">Recurring Transactions</label>
+                        <div style={{ marginTop: 'var(--spacing-sm)' }}>
+                            <button
+                                className="btn btn-secondary"
+                                onClick={() => navigate('/recurring')}
+                            >
+                                <RefreshCw size={16} />
+                                Manage Recurring ({recurringCount} active)
+                            </button>
+                            <p className="text-muted" style={{ fontSize: '0.75rem', marginTop: 'var(--spacing-xs)' }}>
+                                Set up transactions that repeat monthly
+                            </p>
+                        </div>
                     </div>
 
                     <div className="form-group" style={{ marginTop: 'var(--spacing-lg)', paddingTop: 'var(--spacing-lg)', borderTop: '1px solid var(--border-color)' }}>

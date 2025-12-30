@@ -9,6 +9,7 @@ import CalculatorsPage from './pages/CalculatorsPage';
 import SettingsPage from './pages/SettingsPage';
 import AboutPage from './pages/AboutPage';
 import OnboardingPage from './pages/OnboardingPage';
+import RecurringManager from './components/RecurringManager';
 import './index.css';
 
 const AppRoutes: React.FC = () => {
@@ -49,6 +50,7 @@ const AppRoutes: React.FC = () => {
               <Route path="/calculators" element={<CalculatorsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/recurring" element={<RecurringManager />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Layout>
