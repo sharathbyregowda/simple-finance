@@ -1,116 +1,127 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import IfThisContinues from './IfThisContinues';
-import { FinanceProvider, useFinance } from '../context/FinanceContext';
+import { useFinance } from '../context/FinanceContext';
 
-// Mock localStorage
-const localStorageMock = (() => {
-    let store: Record<string, string> = {};
-    return {
-        getItem: vi.fn((key) => store[key] || null),
-        setItem: vi.fn((key, value) => {
-            store[key] = value.toString();
-        }),
-        clear: vi.fn(() => {
-            store = {};
-        }),
-    };
-})();
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-
-// Mocking useFinance
-vi.mock('../context/FinanceContext', async () => {
-    const actual = await vi.importActual('../context/FinanceContext');
-    return {
-        ...actual,
-        useFinance: vi.fn(),
-    };
-});
+// Mock the FinanceContext
+vi.mock('../context/FinanceContext');
 
 describe('IfThisContinues', () => {
+    const createMockData = (overrides = {}) => ({
+        data: {
+            currency: 'USD',
+            currentMonth: '2024-01',
+            expenses: [],
+            customCategories: [],
+            ...overrides
+        },
+        monthlyTrends: [
+            { month: '2023-10', income: 5000, expenses: 4000, savings: 1000, needs: 2500, wants: 1500 },
+            { month: '2023-11', income: 5000, expenses: 4000, savings: 1000, needs: 2500, wants: 1500 },
+            { month: '2023-12', income: 5000, expenses: 4000, savings: 1000, needs: 2500, wants: 1500 },
+        ],
+    });
+
     beforeEach(() => {
-        vi.mocked(useFinance).mockReturnValue({
-            data: {
-                currency: 'USD',
-                currentMonth: '2023-01',
-                expenses: [],
-                customCategories: [],
-            },
-            monthlyTrends: [
-                { month: '2022-10', income: 1000, expenses: 800, savings: 200, needs: 500, wants: 300 },
-                { month: '2022-11', income: 1000, expenses: 800, savings: 200, needs: 500, wants: 300 },
-                { month: '2022-12', income: 1000, expenses: 800, savings: 200, needs: 500, wants: 300 },
-            ],
-        } as any);
+        vi.clearAllMocks();
+        vi.mocked(useFinance).mockReturnValue(createMockData() as any);
     });
 
-    it('renders with the correct projection card class for layout consistency', () => {
-        const { container } = render(
-            <FinanceProvider>
-                <IfThisContinues />
-            </FinanceProvider>
-        );
+    describe('Rendering', () => {
+        it('should render the forecast title', () => {
+            render(<IfThisContinues />);
+            expect(screen.getByText(/12-Month Forecast/i)).toBeInTheDocument();
+        });
 
-        // resulting HTML matches the component structure
-        const component = container.firstChild as HTMLElement;
-        expect(component).toBeInTheDocument();
-        expect(component).toHaveClass('projection-component');
-        expect(component).toHaveClass('border-l-4');
-        expect(component).toHaveClass('border-l-primary');
+        it('should render with projections-unified class', () => {
+            const { container } = render(<IfThisContinues />);
+            const component = container.querySelector('.projections-unified');
+            expect(component).toBeInTheDocument();
+        });
 
-        expect(screen.getByText(/If This Continues/i)).toBeInTheDocument();
+        it('should show forecast headline', () => {
+            render(<IfThisContinues />);
+            // The component displays "Savings Growth" or "Spending Deficit"
+            expect(screen.getByText(/Savings Growth/i)).toBeInTheDocument();
+        });
+
+        it('should display average monthly stats', () => {
+            render(<IfThisContinues />);
+            expect(screen.getByText(/Avg. Monthly Income/i)).toBeInTheDocument();
+            expect(screen.getByText(/Avg. Monthly Expenses/i)).toBeInTheDocument();
+            expect(screen.getByText(/Avg. Monthly Savings/i)).toBeInTheDocument();
+        });
+
+        it('should show "What This Covers" section', () => {
+            render(<IfThisContinues />);
+            expect(screen.getByText(/What This Covers/i)).toBeInTheDocument();
+            expect(screen.getByText(/Living Expenses/i)).toBeInTheDocument();
+        });
     });
 
-    it('updates based on user selected month', () => {
-        // First render with Jan context
-        const { rerender } = render(
-            <FinanceProvider>
-                <IfThisContinues />
-            </FinanceProvider>
-        );
+    describe('Projections Calculation', () => {
+        it('should project yearly savings based on monthly trends', () => {
+            // Monthly savings: 1000 * 12 = 12,000 yearly
+            render(<IfThisContinues />);
+            // The amount appears multiple times (headline, description)
+            expect(screen.getAllByText(/\$12,000/i).length).toBeGreaterThan(0);
+        });
 
-        // Projected savings = 200 * 12 = 2400
-        expect(screen.getAllByText(/\$2,400/i).length).toBeGreaterThanOrEqual(1);
+        it('should update projections based on different data', () => {
+            vi.mocked(useFinance).mockReturnValue({
+                ...createMockData(),
+                monthlyTrends: [
+                    { month: '2023-10', income: 3000, expenses: 2500, savings: 500, needs: 1500, wants: 1000 },
+                    { month: '2023-11', income: 3000, expenses: 2500, savings: 500, needs: 1500, wants: 1000 },
+                    { month: '2023-12', income: 3000, expenses: 2500, savings: 500, needs: 1500, wants: 1000 },
+                ],
+            } as any);
 
-        // Change context to a month with more history
-        vi.mocked(useFinance).mockReturnValue({
-            data: {
-                currency: 'USD',
-                currentMonth: '2023-03', // Now we should see Jan and Feb in 2023 history too
-                expenses: [],
-                customCategories: [],
-            },
-            monthlyTrends: [
-                { month: '2022-12', income: 1000, expenses: 800, savings: 200, needs: 500, wants: 300 },
-                { month: '2023-01', income: 2000, expenses: 1000, savings: 1000, needs: 500, wants: 500 },
-                { month: '2023-02', income: 2000, expenses: 1000, savings: 1000, needs: 500, wants: 500 },
-            ],
-        } as any);
-
-        rerender(
-            <FinanceProvider>
-                <IfThisContinues />
-            </FinanceProvider>
-        );
-
-        // Avg savings = (200 + 1000 + 1000) / 3 = 733.33 -> 8800 yearly
-        expect(screen.getAllByText(/\$8,800/i).length).toBeGreaterThanOrEqual(1);
+            render(<IfThisContinues />);
+            // Monthly savings: 500 * 12 = 6,000 yearly
+            expect(screen.getAllByText(/\$6,000/i).length).toBeGreaterThan(0);
+        });
     });
 
-    it('toggles content between projection stats and "what this buys" benchmarks', () => {
-        render(
-            <FinanceProvider>
-                <IfThisContinues />
-            </FinanceProvider>
-        );
+    describe('Currency Formatting', () => {
+        it('should display amounts in GBP when currency is GBP', () => {
+            vi.mocked(useFinance).mockReturnValue({
+                ...createMockData({ currency: 'GBP' }),
+                monthlyTrends: [
+                    { month: '2023-10', income: 5000, expenses: 4000, savings: 1000, needs: 2500, wants: 1500 },
+                    { month: '2023-11', income: 5000, expenses: 4000, savings: 1000, needs: 2500, wants: 1500 },
+                    { month: '2023-12', income: 5000, expenses: 4000, savings: 1000, needs: 2500, wants: 1500 },
+                ],
+            } as any);
 
-        // Switch to "What This Buys You" tab
-        const buysTab = screen.getByRole('button', { name: /What This Buys You/i });
-        fireEvent.click(buysTab);
+            render(<IfThisContinues />);
+            // Should show GBP symbol somewhere
+            expect(screen.getAllByText(/£/).length).toBeGreaterThan(0);
+        });
+    });
 
-        // Now what this buys content should be visible
-        expect(screen.getByText((content) => content.includes('Your projected savings can cover') && content.includes('one') && content.includes('at a time'))).toBeInTheDocument();
-        expect(screen.getByText(/Living Expenses/i)).toBeInTheDocument();
-        expect(screen.getByText(/3 months/i)).toBeInTheDocument();
+    describe('Empty State', () => {
+        it('should return null when no projection data', () => {
+            vi.mocked(useFinance).mockReturnValue({
+                ...createMockData(),
+                monthlyTrends: [],
+            } as any);
+
+            const { container } = render(<IfThisContinues />);
+            expect(container.firstChild).toBeNull();
+        });
+
+        it('should return null when projection is zero or negative', () => {
+            vi.mocked(useFinance).mockReturnValue({
+                ...createMockData(),
+                monthlyTrends: [
+                    { month: '2023-10', income: 0, expenses: 0, savings: 0, needs: 0, wants: 0 },
+                ],
+            } as any);
+
+            const { container } = render(<IfThisContinues />);
+            // Component returns null if yearlyProjection <= 0
+            expect(container.firstChild).toBeNull();
+        });
     });
 });
