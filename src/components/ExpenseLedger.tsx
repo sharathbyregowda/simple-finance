@@ -50,7 +50,11 @@ const ExpenseLedger: React.FC = () => {
             return;
         }
 
-        if (!categoryValue) return;
+        // Validate category field with user-friendly message
+        if (!categoryValue) {
+            alert('Please select a category for the expense.');
+            return;
+        }
 
         const { categoryId, subcategoryId } = parseCategoryValue(categoryValue);
 
@@ -225,7 +229,6 @@ const ExpenseLedger: React.FC = () => {
                                 <button
                                     className="btn-icon btn-icon-primary"
                                     onClick={handleSubmit}
-                                    disabled={!amount || !categoryValue}
                                     title="Add Entry (Enter)"
                                 >
                                     <Plus size={18} />
