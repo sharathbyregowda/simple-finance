@@ -52,11 +52,6 @@ const RecurringManager: React.FC = () => {
         return { categoryId: catId, subcategoryId: subId || undefined };
     };
 
-    // Helper to create the combined category value
-    const createCategoryValue = (catId: string, subId?: string) => {
-        return subId ? `${catId}:${subId}` : catId;
-    };
-
     const handleAddIncome = (e: React.FormEvent) => {
         e.preventDefault();
         if (!incomeAmount || !incomeSource) return;
