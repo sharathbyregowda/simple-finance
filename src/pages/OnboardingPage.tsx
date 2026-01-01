@@ -36,15 +36,6 @@ const OnboardingPage: React.FC = () => {
 
     const renderStep1 = () => (
         <div className="onboarding-content founders-letter">
-            {/* Welcome Banner */}
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                <img
-                    src="/kannadi/kannadi-banner.webp"
-                    alt="Kannadi - See your numbers"
-                    style={{ maxWidth: '280px', height: 'auto', borderRadius: '12px' }}
-                />
-            </div>
-
             <div className="founders-letter-header">
                 <p className="founders-letter-label">A Note from the Developer</p>
             </div>

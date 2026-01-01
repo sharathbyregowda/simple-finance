@@ -13,7 +13,7 @@ const AboutPage: React.FC = () => {
                 <img
                     src="/kannadi/kannadi-banner.webp"
                     alt="Kannadi - See your numbers"
-                    style={{ maxWidth: '280px', height: 'auto', borderRadius: '12px' }}
+                    style={{ maxWidth: '150px', height: 'auto', borderRadius: '12px' }}
                 />
             </div>
 

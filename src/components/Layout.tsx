@@ -31,11 +31,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <div className="flex flex-col h-full" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                     {/* Logo Area */}
                     <div className="sidebar-header">
-                        <div>
-                            <h1 className="brand-title">
-                                Kannadi
-                            </h1>
-                            <p className="brand-subtitle">See your numbers</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <img
+                                src="/kannadi/kannadilogo.webp"
+                                alt="Kannadi"
+                                style={{ width: '36px', height: '36px', borderRadius: '8px' }}
+                            />
+                            <div>
+                                <h1 className="brand-title">
+                                    Kannadi
+                                </h1>
+                                <p className="brand-subtitle">See your numbers</p>
+                            </div>
                         </div>
                         <button onClick={toggleMobileMenu} className="md:hidden text-muted hover:text-white" style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', display: 'none' /* Handled by media query via class if needed, but keeping simple for now */ }}>
                             <X size={24} />
