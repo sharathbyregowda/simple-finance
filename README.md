@@ -4,7 +4,9 @@
 
 ![Kannadi - See your numbers](./public/kannadi-banner.webp)
 
-Kannadi helps you see your personal finance numbers clearly. Track income, expenses, savings, and cash flow over time in one place.
+**Kannadi** (pronounced *kuh-NAH-dee*) means "mirror" in Kannada. Kannadi reflects your money habits back to you, exactly as they are.
+
+Track income, expenses, savings, and cash flow over time in one place.
 
 ## ✨ Key Features
 

@@ -23,7 +23,7 @@ const AboutPage: React.FC = () => {
 
             <div className="founders-letter-body">
                 <p className="founders-letter-text">
-                    Welcome. I built this app for one reason: to help us clearly see and understand our money.
+                    Welcome. I built this app for one reason: to help you clearly see and understand your money. It's called Kannadi (pronounced kuh-NAH-dee). In Kannada, it means mirror. Kannadi reflects your money habits back to you, exactly as they are.
                 </p>
 
                 <div className="founders-letter-pullquote">
