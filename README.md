@@ -48,6 +48,13 @@ Track income, expenses, savings, and cash flow over time in one place.
 - **50/30/20 Budget**: Compare actual spending vs recommended allocation
 - **Financial Projections**: "If This Continues" calculator for long-term planning
 
+## 📱 Mobile Responsive
+
+- **Bottom Navigation Bar**: Quick access to key screens on mobile
+- **Touch-Friendly**: 44px touch targets, larger inputs
+- **Horizontal Scroll Tables**: Expense ledger scrolls smoothly on small screens
+- **iOS Safe Area Support**: Works great on notched iPhones
+
 ## 🔒 Privacy First
 
 - ✅ **No servers** - All data stays on your device

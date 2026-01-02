@@ -79,21 +79,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     backgroundColor: 'var(--bg-card)',
                     minHeight: '4rem'
                 }}>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <button
                             onClick={toggleMobileMenu}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                color: 'inherit',
-                                cursor: 'pointer',
-                                display: 'none' // Hidden by default (desktop)
-                            }}
-                            className="mobile-menu-btn" // We'll add media query for this class if needed, or inline style logic
+                            className="mobile-menu-btn"
+                            aria-label="Open menu"
                         >
                             <Menu size={24} />
                         </button>
-                        <span className="font-bold md:hidden mobile-brand" style={{ display: 'none' }}>Kannadi</span>
+                        <span className="mobile-brand">Kannadi</span>
                     </div>
 
                     {/* Desktop/Global Actions */}
@@ -155,6 +149,26 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
             )}
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="bottom-nav">
+                <NavLink to="/" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+                    <LayoutDashboard size={22} />
+                    <span>Home</span>
+                </NavLink>
+                <NavLink to="/transactions" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+                    <Receipt size={22} />
+                    <span>Transactions</span>
+                </NavLink>
+                <NavLink to="/reports" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+                    <PieChart size={22} />
+                    <span>Reports</span>
+                </NavLink>
+                <NavLink to="/settings" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+                    <Settings size={22} />
+                    <span>Settings</span>
+                </NavLink>
+            </nav>
         </div>
     );
 };

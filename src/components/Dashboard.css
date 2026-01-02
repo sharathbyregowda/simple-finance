@@ -101,6 +101,21 @@
     justify-content: space-between;
 }
 
+/* Mobile menu button - hidden on desktop */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+}
+
+/* Mobile brand - hidden on desktop */
+.mobile-brand {
+    display: none;
+}
+
 .content-scroll-area {
     flex: 1;
     overflow-y: auto;
@@ -210,6 +225,8 @@
 
     .content-scroll-area {
         padding: var(--spacing-md);
+        padding-bottom: calc(var(--spacing-md) + 70px);
+        /* Space for bottom nav */
     }
 
     .app-layout {
@@ -227,6 +244,54 @@
     .hidden-mobile {
         display: none !important;
     }
+
+    /* Show bottom navigation on mobile */
+    .bottom-nav {
+        display: flex;
+    }
+}
+
+/* Bottom Navigation Bar - Hidden on Desktop */
+.bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border-color);
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+    padding: 0 var(--spacing-sm);
+    padding-bottom: env(safe-area-inset-bottom);
+    /* iOS safe area */
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    min-width: 60px;
+}
+
+.bottom-nav-item:hover,
+.bottom-nav-item.active {
+    color: var(--color-primary);
+}
+
+.bottom-nav-item.active {
+    color: #60a5fa;
 }
 
 .overlay {
@@ -1277,19 +1342,57 @@
     opacity: 1;
 }
 
-/* Mobile Adjustments */
+/* Mobile Form & Touch Improvements */
 @media (max-width: 640px) {
     .ledger-card {
         padding: var(--spacing-sm);
     }
 
+    /* Horizontal scroll for table on small screens */
+    .ledger-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .ledger-table {
+        min-width: 600px;
+    }
+
     .ledger-table th,
     .ledger-table td {
-        padding: 6px;
+        padding: 8px 6px;
+    }
+
+    /* Always show row actions on mobile (no hover) */
+    .row-actions {
+        opacity: 1;
     }
 }
 
 @media (max-width: 768px) {
+
+    /* Touch-friendly input sizes (44px minimum touch target) */
+    .input,
+    .select,
+    .ledger-input,
+    .ledger-select {
+        min-height: 44px;
+        font-size: 16px;
+        /* Prevents iOS zoom on focus */
+    }
+
+    /* Touch-friendly buttons */
+    .btn {
+        min-height: 44px;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .btn-icon {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* Stack form elements on mobile */
     .month-selector-container {
         margin-top: var(--spacing-md);
         align-items: flex-start;
@@ -1298,6 +1401,27 @@
 
     .month-selector-container .select {
         width: 100%;
+    }
+
+    /* Income form improvements */
+    .income-form-card .flex {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .income-form-card .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Form groups full width */
+    .form-group {
+        margin-bottom: var(--spacing-md);
+    }
+
+    /* Card padding reduction for more space */
+    .card {
+        padding: var(--spacing-md);
     }
 }
 
@@ -1371,6 +1495,7 @@
         gap: var(--spacing-sm);
     }
 }
+
 /* ========================================
    FINANCIAL JOURNEY - REDESIGNED
    Horizontal Card Layout with Radial Progress
@@ -1796,11 +1921,11 @@
     .insights-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .insight-card {
         padding: 1rem;
     }
-    
+
     .insight-icon-wrapper {
         width: 40px;
         height: 40px;
@@ -2063,11 +2188,11 @@
     .projections-layout {
         grid-template-columns: 1fr;
     }
-    
+
     .projection-forecast {
         order: 1;
     }
-    
+
     .projection-coverage {
         order: 2;
     }
@@ -2077,16 +2202,16 @@
     .forecast-stats {
         gap: 0.75rem;
     }
-    
+
     .forecast-stat-card {
         padding: 1rem;
     }
-    
+
     .stat-icon {
         width: 40px;
         height: 40px;
     }
-    
+
     .stat-value {
         font-size: 1.25rem;
     }
