@@ -135,14 +135,27 @@ The app will be available at `https://sharathbyregowda.github.io/kannadi/`
 ### Dashboard
 *Get a quick overview of your financial health*
 
+![Dashboard](./public/Dashboard.webp)
+
+### Reports
+*Analyze spending patterns with charts and breakdowns*
+
+![Reports](./public/Reports.webp)
+
+### Forecast
+*See projections and financial milestones*
+
+![Forecast](./public/Forecast.webp)
+
 ### Goal Planner
 *Calculate how long it takes to reach your savings goals*
 
-### Expense Ledger
-*Rapidly add and edit expenses with a spreadsheet-like interface*
+![Goal Planner](./public/GoalPlanner.webp)
 
-### Data Management
-*Securely backup and restore your data*
+### Settings
+*Manage currencies, categories, and data backup*
+
+![Settings](./public/Settings.webp)
 
 ## 🗺️ Roadmap
 
