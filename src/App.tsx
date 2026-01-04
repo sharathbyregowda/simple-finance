@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 import { FinanceProvider, useFinance } from './context/FinanceContext';
 import Layout from './components/Layout';
 import DashboardPage from './pages/DashboardPage';
@@ -67,6 +68,7 @@ const App: React.FC = () => {
       <FinanceProvider>
         <AppRoutes />
         <SpeedInsights />
+        <Analytics />
       </FinanceProvider>
     </Router>
   );
